@@ -1,13 +1,15 @@
 <template lang="pug">
-    div tab
+    div {{ __('tab') }}
 </template>
 <script>
+  const __ = chrome.i18n.getMessage
+
   export default {
     data: () => ({
     }),
     computed: { },
     created () {
-      console.log('tab')
+      console.log(__('tab'))
     },
     mounted () { },
     methods: { }

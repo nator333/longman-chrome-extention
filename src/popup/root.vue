@@ -1,28 +1,21 @@
 <template lang="pug">
     div
-      el-button(type="warning" @click="tab") New tab
+      el-button(type="primary" @click="tab") {{ __('popup') }}
 </template>
 <script>
+  const __ = chrome.i18n.getMessage
+
   export default {
     data: () => ({
     }),
     computed: { },
     created () {
-      console.log('New tab')
+      console.log(__('popup'))
     },
     mounted () { },
     methods: {
       tab () {
-        chrome.contextMenus.create({
-          'title': 'テキスト読み上げ',
-          'type': 'normal',
-          'contexts': ['selection'],
-          'onclick': function () {
-            return function (info, tab) {
-              chrome.tts.speak(info.selectionText)
-            }
-          }
-        })
+        chrome.tabs.create({ url: 'pages/app.html' })
       }
     }
   }

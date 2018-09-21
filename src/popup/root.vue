@@ -30,6 +30,6 @@
 </script>
 <style lang="scss">
   div {
-    color: blue
+    color: #ff42d4
   }
 </style>

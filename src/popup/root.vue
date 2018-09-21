@@ -1,6 +1,6 @@
 <template lang="pug">
     div
-      el-button(type="primary" @click="tab") New tab
+      el-button(type="warning" @click="tab") New tab
 </template>
 <script>
   export default {
@@ -8,7 +8,6 @@
     }),
     computed: { },
     created () {
-      console.log('New tab')
       console.log('New tab')
     },
     mounted () { },
@@ -30,6 +29,6 @@
 </script>
 <style lang="scss">
   div {
-    color: #ff42d4
+    color: blue
   }
 </style>

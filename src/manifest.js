@@ -33,14 +33,13 @@ module.exports = {
       'js/vendor.js',
       'js/content.js'
     ],
+    css: [
+
+    ],
     run_at: 'document_end',
     matches: ['<all_urls>'],
     all_frames: true
   }],
   manifest_version: 2,
-  content_security_policy: 'script-src \'self\'; object-src \'self\'',
-  web_accessible_resources: [
-    'panel.html',
-    'js/content.js'
-  ]
+  content_security_policy: 'script-src \'self\'; object-src \'self\''
 }

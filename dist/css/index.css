@@ -102,7 +102,7 @@
     text-decoration: underline;
 }
 
-.long-man-dict-bubble.left-arrow:before{
+/*.long-man-dict-bubble.left-arrow:before{
     content: "";
     position: absolute;
     top: 100%;
@@ -119,15 +119,49 @@
     left: 50%;
     margin-left: -15px;
     border: 15px solid transparent;
-    border-top: 15px solid #e0edff;
+    border-top: 15px solid white;
 }
 
-.long-man-dict-bubble.fsdfsd:before{
+*/
+
+.long-man-dict-bubble.lower-arrow:before{
+    content: "";
+    position: absolute;
+    top: -29px;
+    left: 50%;
+    margin-left: -15px;
+    border: 15px solid transparent;
+    border-bottom: 15px solid white;
+    z-index: 10;
+}
+
+.long-man-dict-bubble.lower-arrow:after{
     content: "";
     position: absolute;
     top: -30px;
     left: 50%;
     margin-left: -15px;
     border: 15px solid transparent;
-    border-bottom: 15px solid #e0edff;
+    border-bottom: 15px solid rgb(168, 168, 168);
+}
+
+.long-man-dict-bubble.upper-arrow:before{
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 100%;
+    margin-left: -15px;
+    border: 15px solid transparent;
+    border-bottom: 15px solid white;
+    z-index: 10;
+}
+
+.long-man-dict-bubble.upper-arrow:after{
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 100%;
+    margin-left: -15px;
+    border: 15px solid transparent;
+    border-bottom: 15px solid rgb(168, 168, 168);
 }

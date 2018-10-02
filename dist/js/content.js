@@ -205,8 +205,10 @@ documentBody.onmouseup = function (content) {
                             // Vertical position calculation and set
                             let topPosition = 0;
                             if (selectionBoundingClientRect.top < bubbleDiv.getBoundingClientRect().height + 10){
+                                bubbleDiv.classList.add("lower-arrow");
                                 topPosition = documentElm.scrollTop + selectionBoundingClientRect.bottom + 10;
                             } else {
+                                bubbleDiv.classList.add("upper-arrow");
                                 topPosition = documentElm.scrollTop + selectionBoundingClientRect.top - (bubbleDiv.getBoundingClientRect().height + 10);
                             }
                             bubbleDiv.style.top = topPosition + "px";

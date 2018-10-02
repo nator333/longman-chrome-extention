@@ -60,6 +60,8 @@ documentBody.onmouseup = function (content) {
                             bubbleDiv.height = frameHeight + "px";
                             bubbleDiv.style.cssText += 'z-index: 999999999 !important;';
                             bubbleDiv.style.position = "absolute";
+                            bubbleDiv.style.visibility = "visible";
+                            bubbleDiv.style.opacity = "0";
 
                             let topPosition = selectionBoundingClientRect.bottom - parentBoundingClientRect.top - selectionHeightPlus28;
                             console.log(`${selectionBoundingClientRect.bottom} - ${parentBoundingClientRect.top} - ${selectionHeightPlus28}`);
@@ -196,26 +198,24 @@ documentBody.onmouseup = function (content) {
                             };
                             containerDiv.appendChild(moreA);
 
-                            // Position left calculation
                             bubbleDiv.appendChild(containerDiv);
-                            console.log(`content.clientX is ${content.clientX}`);
-                            console.log(`frameWidth is ${frameWidth}`);
-                            console.log(`documentBody.clientWidth is ${documentBody.clientWidth}`);
-                            console.log(`documentElm.scrollLeft is ${documentElm.scrollLeft}`);
+                            documentBody.appendChild(bubbleDiv);
 
-                            if (content.clientX + frameWidth > documentBody.clientWidth) {
-                                bubbleDiv.style.left = documentBody.clientWidth + documentElm.scrollLeft - frameWidth + "px";
+                            // Position left calculation and set
+                            let frameVerticalCenter = bubbleDiv.getBoundingClientRect().width / 2;
+                            if (content.clientX + frameVerticalCenter > documentBody.clientWidth) {
+                                bubbleDiv.style.left = selectionBoundingClientRect.right - bubbleDiv.getBoundingClientRect().width + "px";
                             } else {
-                                let frameVerticalCenter = frameWidth / 2;
                                 if (frameVerticalCenter > content.clientX) {
                                     bubbleDiv.style.left = selectionBoundingClientRect.left + "px";
                                     bubbleDiv.classList.add("left-arrow");
                                 } else {
-                                    bubbleDiv.style.left = (content.clientX + documentElm.scrollLeft - frameWidth / 2) + "px";
+                                    bubbleDiv.style.left = content.clientX + documentElm.scrollLeft - frameVerticalCenter + "px";
                                     bubbleDiv.classList.add("center-arrow");
                                 }
                             }
-                            documentBody.appendChild(bubbleDiv);
+                            // Display
+                            bubbleDiv.style.opacity = "1";
                         };
                         request.send();
                     };

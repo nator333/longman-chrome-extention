@@ -203,22 +203,12 @@ documentBody.onmouseup = function (content) {
                             bubbleDiv.style.left = leftPosition + "px";
 
                             // Vertical position calculation and set
-                            // 表示されてるTOPいちにバブルが収まるかどうかで上下を決める
-                            console.log(`selectionBoundingClientRect.bottom is ${selectionBoundingClientRect.bottom}`);
-                            console.log(`parentBoundingClientRect.top is ${parentBoundingClientRect.top}`);
-                            console.log(`documentElm.scrollTop is ${documentElm.scrollTop}`);
-                            console.log(`bubbleDiv.getBoundingClientRect().height is ${bubbleDiv.getBoundingClientRect().height}`);
-
                             let topPosition = 0;
-                            console.log(`topPosition1 is ${topPosition}`);
-                            if (topPosition - documentElm.scrollTop < bubbleDiv.getBoundingClientRect().height) {
-                                console.log(`lower`);
-                                topPosition += 10;
-                            } else if (topPosition + bubbleDiv.getBoundingClientRect().height > documentElm.scrollTop) {
-                                console.log(`upper`);
-                                topPosition = selectionBoundingClientRect.top - (bubbleDiv.getBoundingClientRect().height + 10);
+                            if (selectionBoundingClientRect.top < bubbleDiv.getBoundingClientRect().height + 10){
+                                topPosition = documentElm.scrollTop + selectionBoundingClientRect.bottom + 10;
+                            } else {
+                                topPosition = documentElm.scrollTop + selectionBoundingClientRect.top - (bubbleDiv.getBoundingClientRect().height + 10);
                             }
-                            console.log(`topPosition2 is ${topPosition}`);
                             bubbleDiv.style.top = topPosition + "px";
 
                             // Display

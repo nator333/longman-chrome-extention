@@ -63,21 +63,6 @@ documentBody.onmouseup = function (content) {
                             bubbleDiv.style.visibility = "visible";
                             bubbleDiv.style.opacity = "0";
 
-                            let topPosition = selectionBoundingClientRect.bottom - parentBoundingClientRect.top - selectionHeightPlus28;
-                            console.log(`${selectionBoundingClientRect.bottom} - ${parentBoundingClientRect.top} - ${selectionHeightPlus28}`);
-
-                            console.log(`${topPosition} - ${documentElm.scrollTop} < ${frameHeight}`);
-                            if (topPosition - documentElm.scrollTop < frameHeight) {
-                                topPosition += 10;
-                            } else {
-                                console.log(`${topPosition} + ${frameHeight} > ${documentElm.scrollTop}`);
-                                if (topPosition + frameHeight > documentElm.scrollTop) {
-                                    console.log(`${(parseInt(bubbleDiv.height))}`);
-                                    topPosition -= (parseInt(bubbleDiv.height));
-                                }
-                            }
-                            bubbleDiv.style.top = topPosition + "px";
-
                             // close btn
                             let closeBtn = document.createElement("div");
                             closeBtn.classList.add("lmd", "long-man-close-btn");
@@ -191,9 +176,9 @@ documentBody.onmouseup = function (content) {
                             moreA.classList.add("lmd", "long-man-a");
                             moreA.href = longmanUrl + selectionText;
                             moreA.innerHTML = "More";
-                            moreA.target="_blank";
+                            moreA.target = "_blank";
                             moreA.style.cursor = "pointer";
-                            moreA.onfocus = function(){
+                            moreA.onfocus = function () {
                                 this.blur();
                             };
                             containerDiv.appendChild(moreA);
@@ -201,19 +186,41 @@ documentBody.onmouseup = function (content) {
                             bubbleDiv.appendChild(containerDiv);
                             documentBody.appendChild(bubbleDiv);
 
-                            // Position left calculation and set
+                            // Horizontal position calculation and set
                             let frameVerticalCenter = bubbleDiv.getBoundingClientRect().width / 2;
+                            let leftPosition = 0;
                             if (content.clientX + frameVerticalCenter > documentBody.clientWidth) {
-                                bubbleDiv.style.left = selectionBoundingClientRect.right - bubbleDiv.getBoundingClientRect().width + "px";
+                                leftPosition = selectionBoundingClientRect.right - bubbleDiv.getBoundingClientRect().width;
                             } else {
                                 if (frameVerticalCenter > content.clientX) {
-                                    bubbleDiv.style.left = selectionBoundingClientRect.left + "px";
+                                    leftPosition = selectionBoundingClientRect.left;
                                     bubbleDiv.classList.add("left-arrow");
                                 } else {
-                                    bubbleDiv.style.left = content.clientX + documentElm.scrollLeft - frameVerticalCenter + "px";
+                                    leftPosition = content.clientX + documentElm.scrollLeft - frameVerticalCenter;
                                     bubbleDiv.classList.add("center-arrow");
                                 }
                             }
+                            bubbleDiv.style.left = leftPosition + "px";
+
+                            // Vertical position calculation and set
+                            // 表示されてるTOPいちにバブルが収まるかどうかで上下を決める
+                            console.log(`selectionBoundingClientRect.bottom is ${selectionBoundingClientRect.bottom}`);
+                            console.log(`parentBoundingClientRect.top is ${parentBoundingClientRect.top}`);
+                            console.log(`documentElm.scrollTop is ${documentElm.scrollTop}`);
+                            console.log(`bubbleDiv.getBoundingClientRect().height is ${bubbleDiv.getBoundingClientRect().height}`);
+
+                            let topPosition = 0;
+                            console.log(`topPosition1 is ${topPosition}`);
+                            if (topPosition - documentElm.scrollTop < bubbleDiv.getBoundingClientRect().height) {
+                                console.log(`lower`);
+                                topPosition += 10;
+                            } else if (topPosition + bubbleDiv.getBoundingClientRect().height > documentElm.scrollTop) {
+                                console.log(`upper`);
+                                topPosition = selectionBoundingClientRect.top - (bubbleDiv.getBoundingClientRect().height + 10);
+                            }
+                            console.log(`topPosition2 is ${topPosition}`);
+                            bubbleDiv.style.top = topPosition + "px";
+
                             // Display
                             bubbleDiv.style.opacity = "1";
                         };

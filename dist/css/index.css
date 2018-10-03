@@ -102,28 +102,6 @@
     text-decoration: underline;
 }
 
-/*.long-man-dict-bubble.left-arrow:before{
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 100%;
-    margin-left: -15px;
-    border: 15px solid transparent;
-    border-top: 15px solid #e0edff;
-}
-
-.long-man-dict-bubble.center-arrow:before{
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -15px;
-    border: 15px solid transparent;
-    border-top: 15px solid white;
-}
-
-*/
-
 .long-man-dict-bubble.lower-arrow:before{
     content: "";
     position: absolute;
@@ -148,20 +126,20 @@
 .long-man-dict-bubble.upper-arrow:before{
     content: "";
     position: absolute;
-    top: 100%;
-    left: 100%;
+    bottom: -29px;
+    left: 50%;
     margin-left: -15px;
     border: 15px solid transparent;
-    border-bottom: 15px solid white;
+    border-top: 15px solid white;
     z-index: 10;
 }
 
 .long-man-dict-bubble.upper-arrow:after{
     content: "";
     position: absolute;
-    top: 100%;
-    left: 100%;
+    bottom: -30px;
+    left: 50%;
     margin-left: -15px;
     border: 15px solid transparent;
-    border-bottom: 15px solid rgb(168, 168, 168);
+    border-top: 15px solid rgb(168, 168, 168);
 }

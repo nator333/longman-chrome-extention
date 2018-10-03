@@ -49,7 +49,7 @@ documentBody.onmouseup = function (content) {
                         // Create a request variable and assign a new XMLHttpRequest object to it.
                         let request = new XMLHttpRequest();
                         // Open a new connection, using the GET request on the URL endpoint
-                        request.open('GET', apiDomain + '/v2/dictionaries/ldoce5/entries?headword=' + selectionText, true);
+                        request.open('GET', apiDomain + '/v2/dictionaries/ldoce5/entries?limit=5&headword=' + selectionText, true);
 
                         request.onload = function () {
                             // Begin accessing JSON data here
@@ -86,17 +86,19 @@ documentBody.onmouseup = function (content) {
 
                             if (dataContent.length > 0) {
                                 for (let i = 0; i < dataContent.length; i++) {
-                                    let partOfSpeechDiv = document.createElement("div");
-                                    partOfSpeechDiv.classList.add("lmd");
-                                    partOfSpeechDiv.innerHTML = "- " + dataContent[i]["partOfSpeech"];
-                                    if ("grammaticalInfo" in dataContent[i]) {
-                                        partOfSpeechDiv.innerHTML += " (" + dataContent[i]["grammaticalInfo"] + ")";
-                                    }
-                                    partOfSpeechDiv.style.fontStyle = "italic";
-                                    partOfSpeechDiv.style.display = "inline-block";
-                                    partOfSpeechDiv.style.paddingRight = "15px";
+                                    if ("partOfSpeech" in dataContent[i]) {
+                                        let partOfSpeechDiv = document.createElement("div");
+                                        partOfSpeechDiv.classList.add("lmd");
+                                        partOfSpeechDiv.innerHTML = "- " + dataContent[i]["partOfSpeech"];
+                                        if ("grammaticalInfo" in dataContent[i]) {
+                                            partOfSpeechDiv.innerHTML += " (" + dataContent[i]["grammaticalInfo"] + ")";
+                                        }
+                                        partOfSpeechDiv.style.fontStyle = "italic";
+                                        partOfSpeechDiv.style.display = "inline-block";
+                                        partOfSpeechDiv.style.paddingRight = "15px";
 
-                                    containerDiv.appendChild(partOfSpeechDiv);
+                                        containerDiv.appendChild(partOfSpeechDiv);
+                                    }
 
                                     if ("audio" in dataContent[i]) {
                                         let audio = document.createElement("audio");
@@ -204,7 +206,7 @@ documentBody.onmouseup = function (content) {
 
                             // Vertical position calculation and set
                             let topPosition = 0;
-                            if (selectionBoundingClientRect.top < bubbleDiv.getBoundingClientRect().height + 10){
+                            if (selectionBoundingClientRect.top < bubbleDiv.getBoundingClientRect().height + 10) {
                                 bubbleDiv.classList.add("lower-arrow");
                                 topPosition = documentElm.scrollTop + selectionBoundingClientRect.bottom + 10;
                             } else {
@@ -245,7 +247,9 @@ function analyzeJson(responseJson, selectionText) {
         // HEADWORD
         json.headword = jsonObj["headword"];
         // PART OF SPEECH
-        json.partOfSpeech = jsonObj["part_of_speech"];
+        if ("part_of_speech" in jsonObj) {
+            json.partOfSpeech = jsonObj["part_of_speech"];
+        }
         // IPA AUDIO
         if ("pronunciations" in jsonObj) {
             const pronunciations = jsonObj["pronunciations"];

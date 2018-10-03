@@ -1,7 +1,7 @@
 const frameWidth = 450;
 const frameHeight = 300;
 const apiDomain = "https://api.pearson.com";
-const longmanUrl = "https://www.ldoceonline.com/dictionary/";
+const lmdUtl = "https://www.ldoceonline.com/dictionary/";
 const examplePrefix = "ex) ";
 let documentBody = document.body;
 let documentElm = document.documentElement;
@@ -179,7 +179,7 @@ documentBody.onmouseup = function (content) {
                             // more
                             let moreA = document.createElement("a");
                             moreA.classList.add("lmd", "lmd-a");
-                            moreA.href = longmanUrl + selectionText;
+                            moreA.href = lmdUtl + selectionText;
                             moreA.innerHTML = "More";
                             moreA.target = "_blank";
                             moreA.style.cursor = "pointer";

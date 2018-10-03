@@ -1,19 +1,21 @@
-.lmdBody {
-    width : 420px
+.lmd-body {
+    width : 420px;
+    margin: 0
+
 }
 
-.lmdContent {
+.lmd-content {
     padding: 10px
 }
 
-#imdTextInput {
+#lmd-text-input {
     font-size: 14px;
     margin: 2px;
     height: 23px;
     width: 70%;
 }
 
-.imdSearchBtn {
+.lmd-search-btn {
     position: relative;
     display: inline-block;
     padding: 0.4em 0.6em;
@@ -28,8 +30,18 @@
     user-select: none;
 }
 
-.imdSearchBtn:hover {
+.lmd-search-btn:hover {
     color: #fae660;
     display: inline-block;
+}
+
+.lmd-footer {
+    padding: 10px;
+    text-align: right;
+    background-color: #4b8bda;
+}
+
+.lmd-a {
+    color: #FFFFFF;
 }
 

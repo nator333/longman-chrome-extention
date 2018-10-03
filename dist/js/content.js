@@ -19,7 +19,10 @@ documentBody.onmouseup = function (content) {
     setTimeout(function () {
         let selectionBoundingClientRect = void 0;
         let selectionObj = window.getSelection();
-        let selectionText = selectionObj.toString().replace(/[\.\*\?;!()\+,\[:\]<>^_`\[\]{}~\\\/\"\'=]/g, " ").trim().toLowerCase();
+        let selectionText = selectionObj.toString().replace(/[\.\*\?;!()\+,\[:\]<>^_`\[\]{}~\\\/\"\'=]/g, " ").trim();
+        if (!selectionText.endsWith("day")) {
+            selectionText = selectionText.toLowerCase();
+        }
         let parentBoundingClientRect = document.body.parentNode.getBoundingClientRect();
         let selectionHeightPlus28 = -1;
 

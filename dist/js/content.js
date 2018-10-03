@@ -65,7 +65,7 @@ documentBody.onmouseup = function (content) {
 
                             // close btn
                             let closeBtn = document.createElement("div");
-                            closeBtn.classList.add("lmd", "long-man-close-btn");
+                            closeBtn.classList.add("lmd", "lmd-close-btn");
                             closeBtn.onclick = function () {
                                 return void(documentBody.removeChild(bubbleDiv) && (bubbleDiv = null));
                             };
@@ -113,7 +113,7 @@ documentBody.onmouseup = function (content) {
                                         };
 
                                         let audioImgDiv = document.createElement("div");
-                                        audioImgDiv.classList.add("lmd", "long-man-audio-img");
+                                        audioImgDiv.classList.add("lmd", "lmd-audio-img");
                                         audioBtnDiv.appendChild(audioImgDiv);
 
                                         containerDiv.appendChild(audioBtnDiv);
@@ -152,7 +152,7 @@ documentBody.onmouseup = function (content) {
                                         };
 
                                         let exampleAudioImgDiv = document.createElement("div");
-                                        exampleAudioImgDiv.classList.add("lmd", "long-man-audio-img");
+                                        exampleAudioImgDiv.classList.add("lmd", "lmd-audio-img");
                                         exampleAudioBtnDiv.appendChild(exampleAudioImgDiv);
                                         containerDiv.appendChild(exampleAudioBtnDiv);
 
@@ -175,7 +175,7 @@ documentBody.onmouseup = function (content) {
 
                             // more
                             let moreA = document.createElement("a");
-                            moreA.classList.add("lmd", "long-man-a");
+                            moreA.classList.add("lmd", "lmd-a");
                             moreA.href = longmanUrl + selectionText;
                             moreA.innerHTML = "More";
                             moreA.target = "_blank";

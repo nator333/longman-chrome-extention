@@ -61,7 +61,7 @@
     padding: 16px;
 }
 
-.long-man-audio-img {
+.lmd-audio-img {
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAQAAABKfvVzAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAACjSURBVDjLY2AYYmA1QwADI3FKy8HkfyA8zqBOjPL/YLqO4SWQ9YXBmbDy/1C2EMMGsBZNQsr/w/lMDCuAvKOElP+HeloQSPIxPAPynVAV/seAENHtYLoKyJpDnIb/DOZA2gBI3yRWQx6Q5gZ7nFYaQE4yJN5JW8B0PaanYaADRcMaBh5wsD7HDFZMLURGHEIL0UkDpoWExAfRQlLyJiMDDSAAALgghxq3YsGLAAAAAElFTkSuQmCC);
     background-size: 91%;
     height: 21px;
@@ -70,14 +70,14 @@
     vertical-align: middle;
 }
 
-.long-man-ipa {
+.lmd-ipa {
     display: inline;
     font-size: 18px;
     margin: 5px auto;
     padding: 5px 0;
 }
 
-.long-man-close-btn {
+.lmd-close-btn {
     height: 21px;
     opacity: 0.4;
     position: absolute;
@@ -90,7 +90,7 @@
     outline: 0px;
 }
 
-.long-man-a {
+.lmd-a {
     color: #A2A2A2;
     float: right;
     padding-top: 16px;
@@ -98,7 +98,7 @@
     font-size: 11px;
 }
 
-.long-man-a:hover {
+.lmd-a:hover {
     text-decoration: underline;
 }
 

@@ -1,11 +1,29 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="utf-8">
-    <title>popup</title>  
-    <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet" type="text/css">
-  </head>
-  <body>
-    <div id="root"></div>
-  <script type="text/javascript" src="/js/manifest.js?805e2900b36b2a3f5fcb"></script><script type="text/javascript" src="/js/vendor.js?805e2900b36b2a3f5fcb"></script><script type="text/javascript" src="/js/popup.js?805e2900b36b2a3f5fcb"></script></body>
+    <title>popup</title>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet"
+          type="text/css">
+    <link rel="stylesheet" type="text/css" href="../css/popup.css">
+    <script src="../js/popup.js"></script>
+</head>
+<body class="lmd-body">
+<div class="lmd-content">
+    <div class="search-bar">
+        <input title="" name="imd-text-input" id="imd-text-input" type="text" maxlength="10" autofocus/>
+        <div class="imd-search-btn">Search</div>
+    </div>
+    <div class="lmd-search-result">
+        <div class="">
+            <div class="lmd lmd-close-btn"></div>
+            <div class="lmd" style="min-width: 200px; max-width: 400px;">
+                <div class="lmd" style="font-weight: bold; font-size: x-large;">html</div>
+                <div class="lmd">Not Found</div>
+                <a class="lmd lmd-a" href="https://www.ldoceonline.com/dictionary/html" target="_blank"
+                   style="cursor: pointer;">More</a></div>
+        </div>
+    </div>
+</div>
+</body>
 </html>

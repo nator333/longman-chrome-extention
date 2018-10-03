@@ -1,0 +1,35 @@
+.lmdBody {
+    width : 420px
+}
+
+.lmdContent {
+    padding: 10px
+}
+
+#imdTextInput {
+    font-size: 14px;
+    margin: 2px;
+    height: 23px;
+    width: 70%;
+}
+
+.imdSearchBtn {
+    position: relative;
+    display: inline-block;
+    padding: 0.4em 0.6em;
+    vertical-align: top;
+    text-decoration: none;
+    color: #FFF;
+    background: #314089;/*背景色*/
+    border-bottom: solid 2px #314089;/*少し濃い目の色に*/
+    border-radius: 4px;/*角の丸み*/
+    box-shadow: inset 0 2px 0 rgba(255,255,255,0.2), 0 2px 2px rgba(0, 0, 0, 0.19);
+    font-weight: bold;
+    user-select: none;
+}
+
+.imdSearchBtn:hover {
+    color: #fae660;
+    display: inline-block;
+}
+

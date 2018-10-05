@@ -14,8 +14,8 @@ let selectionText = "";
 let selectedClientX = 0;
 let selectionBoundingClientRect = void 0;
 
-ICON_DIV.classList.add("cambridge-dict");
-DICT_ICON_IMAGE_DIV.classList.add("cambridge-dict-icon");
+ICON_DIV.classList.add("longman-dict");
+DICT_ICON_IMAGE_DIV.classList.add("longman-dict-icon");
 ICON_DIV.appendChild(DICT_ICON_IMAGE_DIV);
 
 DOCUMENT_BODY.addEventListener("mouseup", somethingSelected, false);
@@ -131,8 +131,8 @@ function mainApiLoaded_1() {
     let headwordDiv = document.createElement("div");
     headwordDiv.innerHTML = selectionText;
     headwordDiv.classList.add("lmd");
+    headwordDiv.style.cssText += 'font-size: x-large !important;';
     headwordDiv.style.fontWeight = "bold";
-    headwordDiv.style.fontSize = "x-large";
     headwordDiv.style.marginBottom = "8px";
     containerDiv.appendChild(headwordDiv);
     let hr = document.createElement("hr");
@@ -226,7 +226,8 @@ function mainApiLoaded_1() {
             synonymsDiv.innerHTML = "Synonyms: ";
             synonymsDiv.classList.add("lmd");
             if ("partOfSpeech" in dataContent[i]) {
-                synonymsDiv.classList.add("synonyms-" + dataContent[i]["partOfSpeech"]);
+                synonymsDiv.classList.add(
+                    "synonyms-" + dataContent[i]["partOfSpeech"].replace(/\s+/g, ""));
             }
             synonymsDiv.style.fontStyle = "italic";
             synonymsDiv.style.display = "inline-block";
@@ -234,6 +235,14 @@ function mainApiLoaded_1() {
             synonymsDiv.style.color = "#6b6060";
             synonymsDiv.style.display = "none";
             containerDiv.appendChild(synonymsDiv);
+
+            if ("synonym" in dataContent[i]) {
+                let synonymDiv = document.createElement("div");
+                synonymDiv.style.display = "inline-block";
+                synonymDiv.innerHTML = dataContent[i]["synonym"];
+                synonymsDiv.appendChild(synonymDiv);
+                synonymsDiv.style.display = "";
+            }
 
             let hr = document.createElement("hr");
             hr.style.margin = "1px";
@@ -255,11 +264,11 @@ function mainApiLoaded_1() {
     let moreA = document.createElement("a");
     moreA.classList.add("lmd", "lmd-a");
     moreA.href = LMD_UTL + selectionText;
-    moreA.innerHTML = "More";
+    moreA.innerHTML = "More >>";
     moreA.target = "_blank";
     moreA.style.cursor = "pointer";
-    moreA.addEventListener("focus", () => {
-        this.blur()
+    moreA.addEventListener("focus", (focusedContent) => {
+        focusedContent.blur()
     }, false);
     footerDiv.appendChild(moreA);
 
@@ -285,12 +294,13 @@ function mainApiLoaded_1() {
 
     // Vertical position calculation and set
     let topPosition = 0;
-    if (selectionBoundingClientRect.top < bubbleDiv.getBoundingClientRect().height + 10) {
+    const TOP_ADJUSTMENT_PX = 12;
+    if (selectionBoundingClientRect.top < bubbleDiv.getBoundingClientRect().height + TOP_ADJUSTMENT_PX) {
         bubbleDiv.classList.add("lower-arrow");
-        topPosition = DOCUMENT_ELM.scrollTop + selectionBoundingClientRect.bottom + 10;
+        topPosition = DOCUMENT_ELM.scrollTop + selectionBoundingClientRect.bottom + TOP_ADJUSTMENT_PX;
     } else {
         bubbleDiv.classList.add("upper-arrow");
-        topPosition = DOCUMENT_ELM.scrollTop + selectionBoundingClientRect.top - (bubbleDiv.getBoundingClientRect().height + 10);
+        topPosition = DOCUMENT_ELM.scrollTop + selectionBoundingClientRect.top - (bubbleDiv.getBoundingClientRect().height + TOP_ADJUSTMENT_PX);
     }
     bubbleDiv.style.top = topPosition + "px";
 
@@ -313,8 +323,24 @@ function synonymApiLoaded() {
     const dataContent = analyzeSynonymApiJson(JSON.parse(this.response));
     for (let key in dataContent) {
         let synonymsPoses = document.getElementsByClassName(key);
-        if (synonymsPoses) {
-            synonymsPoses[0].innerHTML +=  dataContent[key];
+        if (synonymsPoses.length !== 0) {
+            if (synonymsPoses[0].getElementsByTagName("div").length !== 0){
+                synonymsPoses[0].innerHTML += ", ";
+            }
+            for (let i = 0; i < dataContent[key].length; i++) {
+                if ("headword" in dataContent[key][i]){
+                    let synonymDiv = document.createElement("div");
+                    synonymDiv.style.display = "inline-block";
+                    synonymDiv.innerHTML = dataContent[key][i]["headword"];
+                    if ("definition" in dataContent[key][i]){
+                        synonymDiv.title = dataContent[key][i]["definition"];
+                    }
+                    synonymsPoses[0].appendChild(synonymDiv);
+                    if (i < dataContent[key].length - 1) {
+                        synonymsPoses[0].innerHTML += ", ";
+                    }
+                }
+            }
             synonymsPoses[0].style.display = "";
         }
     }
@@ -379,27 +405,34 @@ function analyzeMainApiJson(responseJson) {
         }
 
         // SENSES
-        for (let key in jsonObj["senses"][0]) {
-            if (jsonObj["senses"][0][key] instanceof Array) {
-                if (jsonObj["senses"][0][key][0] instanceof Object) {
-                    if ("text" in jsonObj["senses"][0][key][0]) {
-                        // EXAMPLE
-                        json.example = {};
-                        json.example.text = EXAMPLE_PREFIX + jsonObj["senses"][0][key][0]["text"];
-                        if ("audio" in jsonObj["senses"][0][key][0]) {
-                            json.example.audio = API_DOMAIN + jsonObj["senses"][0][key][0]["audio"][0]["url"];
-                        }
+        if ("senses" in jsonObj && jsonObj["senses"]) {
+            for (let key in jsonObj["senses"][0]) {
+                if (jsonObj["senses"][0][key] instanceof Array) {
+                    if (jsonObj["senses"][0][key][0] instanceof Object) {
+                        if ("text" in jsonObj["senses"][0][key][0]) {
+                            // EXAMPLE
+                            json.example = {};
+                            json.example.text = EXAMPLE_PREFIX + jsonObj["senses"][0][key][0]["text"];
+                            if ("audio" in jsonObj["senses"][0][key][0]) {
+                                json.example.audio = API_DOMAIN + jsonObj["senses"][0][key][0]["audio"][0]["url"];
+                            }
 
+                        }
+                    } else {
+                        // DEFINITION
+                        json.definition = jsonObj["senses"][0][key][0];
                     }
-                } else {
-                    // DEFINITION
-                    json.definition = jsonObj["senses"][0][key][0];
+                } else if (jsonObj["senses"][0][key] instanceof Object
+                    && "type" in jsonObj["senses"][0][key]) {
+                    // GRAMMATICAL INFO
+                    json.grammaticalInfo = jsonObj["senses"][0][key]["type"];
+                } else if ("synonym" in jsonObj["senses"][0]) {
+                    // SYNONYM
+                    json.synonym = jsonObj["senses"][0][key];
                 }
-            } else if (jsonObj["senses"][0][key] instanceof Object) {
-                // GRAMMATICAL INFO
-                json.grammaticalInfo = jsonObj["senses"][0][key]["type"];
             }
         }
+
         // URL
         json.url = "https://www.ldoceonline.com/dictionary/" + json.headword;
         jsonAry.push(json);
@@ -422,16 +455,32 @@ function analyzeSynonymApiJson(responseJson) {
     }
     for (let responseAryKey in responseJson["results"]) {
         const SYNONYM_JSON = responseJson["results"][responseAryKey];
-        if (!"part_of_speech" in SYNONYM_JSON) {
+        if (!("part_of_speech" in SYNONYM_JSON)
+            || !("headword" in SYNONYM_JSON)
+            || selectionText === SYNONYM_JSON["headword"]) {
             continue;
         }
-        const SYNONYM_CLASS_STR = "synonyms-" + SYNONYM_JSON["part_of_speech"];
-        if ("SYNONYM_CLASS_STR" in jsonObj) {
-            let existingPos = jsonObj[SYNONYM_CLASS_STR];
-            jsonObj[SYNONYM_CLASS_STR] = existingPos + ", " + SYNONYM_JSON["headword"];
-        } else {
-            jsonObj[SYNONYM_CLASS_STR] = SYNONYM_JSON["headword"];
+        const SYNONYM_CLASS_STR = "synonyms-" + SYNONYM_JSON["part_of_speech"].replace(/\s+/g, "");;
+        if (!(SYNONYM_CLASS_STR in jsonObj)) {
+            jsonObj[SYNONYM_CLASS_STR] = [];
         }
+        let synonymJson = {
+            "headword": SYNONYM_JSON["headword"],
+        };
+
+        // SENSES
+        if ("senses" in SYNONYM_JSON && SYNONYM_JSON["senses"] instanceof  Array){
+            for (let key in SYNONYM_JSON["senses"][0]) {
+                if (SYNONYM_JSON["senses"][0][key] instanceof Array) {
+                    if (!(SYNONYM_JSON["senses"][0][key][0] instanceof Object)) {
+                        // DEFINITION
+                        synonymJson[key] = SYNONYM_JSON["senses"][0][key][0];
+                    }
+                }
+            }
+        }
+
+        jsonObj[SYNONYM_CLASS_STR].push(synonymJson);
     }
 
     console.log(jsonObj);

@@ -10,7 +10,6 @@
   },
   "permissions": [
     "activeTab",
-    "contextMenus",
     "storage"
   ],
   "browser_action": {

@@ -18,7 +18,12 @@ ICON_DIV.classList.add("lmd-icon");
 IMAGE_DIV.classList.add("lmd-icon-img");
 ICON_DIV.appendChild(IMAGE_DIV);
 
-DOCUMENT_BODY.addEventListener("mouseup", somethingSelected, false);
+chrome.storage.local.get(['rt5ff45tg65uhr'], function(result) {
+    if (!result.rt5ff45tg65uhr) {
+        console.log('rt5ff45tg65uhr currently is ' + result.rt5ff45tg65uhr);
+        DOCUMENT_BODY.addEventListener("mouseup", somethingSelected, false);
+    }
+});
 
 /**
  * Fired when something selected, display icon
@@ -31,15 +36,19 @@ function somethingSelected(mouseUpContent) {
         return void(DOCUMENT_BODY.removeChild(bubbleDiv) && (bubbleDiv = null))
     }
 
-    if (false) {
-        setTimeout(()=> {
-            displayIcon(mouseUpContent)
-        });
-    } else {
-        setTimeout(()=> {
-            displayBubble(mouseUpContent)
-        });
-    }
+    chrome.storage.local.get(['fyhy9876'], function(result) {
+        console.log('fyhy9876 currently is ' + result.fyhy9876);
+        if (result.fyhy9876) {
+            setTimeout(()=> {
+                displayIcon(mouseUpContent)
+            });
+        } else {
+            setTimeout(()=> {
+                displayBubble(mouseUpContent)
+            });
+        }
+    });
+
 }
 
 /**

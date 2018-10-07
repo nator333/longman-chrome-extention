@@ -18,9 +18,9 @@ ICON_DIV.classList.add("lmd-icon");
 IMAGE_DIV.classList.add("lmd-icon-img");
 ICON_DIV.appendChild(IMAGE_DIV);
 
-chrome.storage.local.get(['rt5ff45tg65uhr'], function(result) {
-    if (!result.rt5ff45tg65uhr) {
-        console.log('rt5ff45tg65uhr currently is ' + result.rt5ff45tg65uhr);
+chrome.storage.local.get(['lmdIsDisable'], function (result) {
+    if (!result.lmdIsDisable) {
+        console.log('lmdIsDisable currently is ' + result.lmdIsDisable);
         DOCUMENT_BODY.addEventListener("mouseup", somethingSelected, false);
     }
 });
@@ -36,14 +36,14 @@ function somethingSelected(mouseUpContent) {
         return void(DOCUMENT_BODY.removeChild(bubbleDiv) && (bubbleDiv = null))
     }
 
-    chrome.storage.local.get(['fyhy9876'], function(result) {
-        console.log('fyhy9876 currently is ' + result.fyhy9876);
-        if (result.fyhy9876) {
-            setTimeout(()=> {
+    chrome.storage.local.get(['lmdShowIconFirst'], function (result) {
+        console.log('lmdShowIconFirst currently is ' + result.lmdShowIconFirst);
+        if (result.lmdShowIconFirst) {
+            setTimeout(() => {
                 displayIcon(mouseUpContent)
             });
         } else {
-            setTimeout(()=> {
+            setTimeout(() => {
                 displayBubble(mouseUpContent)
             });
         }
@@ -63,7 +63,8 @@ function displayIcon(mouseUpContent) {
         .replace(/[\.\*\?;!()\+,\[:\]<>^_`\[\]{}~\\\/\"\'=]/g, " ")
         .trim();
 
-    if (!selectionTextForCheck || selectionTextForCheck.includes(" ")) {
+    if (!selectionTextForCheck || selectionTextForCheck.includes(" ")
+        || !(selectionTextForCheck.match(/^[a-zA-Z]+$/))) {
         if (isIconAdded && DOCUMENT_BODY.removeChild(ICON_DIV)) {
             isIconAdded = false;
         }

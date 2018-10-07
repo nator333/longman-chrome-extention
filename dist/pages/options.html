@@ -5,14 +5,22 @@
     <title>options</title>
     <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet"
           type="text/css">
+    <link rel="stylesheet" type="text/css" href="../css/option.css">
 </head>
 <body>
-<div id="root">
+<div class="lmd-option-content">
+    <h1>
+        <div id="options-title-heading">Longman Dictionary Extension Options</div>
+    </h1>
     <p>
-        <input type="radio" name="lmd-option" value="0">No popup and bubble<br>
-        <input type="radio" name="lmd-option" value="1">bubble after icon click<br>
-        <input type="radio" name="lmd-option" value="2">bubble instantaneously
+        <label><input type="checkbox" id="lmd-isDisable"/>Disable</label><br>
     </p>
+    <div class="option_name">Pop-up search option:</div>
+    <div class="option_radios">
+        <label><input type="radio" name="lmd-option" value="1">Show bubble after icon click</label><br>
+        <label><input type="radio" name="lmd-option" value="2">Show bubble after a selection instantaneously</label>
+    </div>
+
 </div>
 <script src="../js/options.js"></script>
 </body>

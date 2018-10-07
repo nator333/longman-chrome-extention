@@ -275,35 +275,6 @@ function mainApiLoaded_1() {
     containerDiv.appendChild(footerDiv);
     bubbleDiv.appendChild(containerDiv);
     DOCUMENT_BODY.appendChild(bubbleDiv);
-
-    // Horizontal position calculation and set
-    let frameVerticalCenter = bubbleDiv.getBoundingClientRect().width / 2;
-    let leftPosition = 0;
-    if (selectionClientX + frameVerticalCenter > DOCUMENT_BODY.clientWidth) {
-        leftPosition = selectionBoundingClientRect.right - bubbleDiv.getBoundingClientRect().width;
-    } else {
-        if (frameVerticalCenter > selectionClientX) {
-            leftPosition = selectionBoundingClientRect.left;
-            bubbleDiv.classList.add("left-arrow");
-        } else {
-            leftPosition = selectionClientX + DOCUMENT_ELM.scrollLeft - frameVerticalCenter;
-            bubbleDiv.classList.add("center-arrow");
-        }
-    }
-    bubbleDiv.style.left = leftPosition + "px";
-
-    // Vertical position calculation and set
-    let topPosition = 0;
-    const TOP_ADJUSTMENT_PX = 12;
-    if (selectionBoundingClientRect.top < bubbleDiv.getBoundingClientRect().height + TOP_ADJUSTMENT_PX) {
-        bubbleDiv.classList.add("lower-arrow");
-        topPosition = DOCUMENT_ELM.scrollTop + selectionBoundingClientRect.bottom + TOP_ADJUSTMENT_PX;
-    } else {
-        bubbleDiv.classList.add("upper-arrow");
-        topPosition = DOCUMENT_ELM.scrollTop + selectionBoundingClientRect.top - (bubbleDiv.getBoundingClientRect().height + TOP_ADJUSTMENT_PX);
-    }
-    bubbleDiv.style.top = topPosition + "px";
-
 }
 
 /**
@@ -312,14 +283,15 @@ function mainApiLoaded_1() {
 function mainApiLoaded_2() {
     let synonymRequest = new XMLHttpRequest();
     synonymRequest.open('GET', API_DOMAIN + '/v2/dictionaries/ldoce5/entries?limit=5&synonyms=' + selectionText, true);
-    synonymRequest.addEventListener("load", synonymApiLoaded, false);
+    synonymRequest.addEventListener("load", synonymApiLoaded_1, false);
+    synonymRequest.addEventListener("load", synonymApiLoaded_2, false);
     synonymRequest.send();
 }
 
 /**
  * Fired when synonym API loaded, update bubble
  */
-function synonymApiLoaded() {
+function synonymApiLoaded_1() {
     const dataContent = analyzeSynonymApiJson(JSON.parse(this.response));
     for (let key in dataContent) {
         let synonymsPoses = document.getElementsByClassName(key);
@@ -344,6 +316,41 @@ function synonymApiLoaded() {
             synonymsPoses[0].style.display = "";
         }
     }
+}
+
+/**
+ * Fired when synonym API loaded, decide bubble position
+ */
+function synonymApiLoaded_2() {
+    // Horizontal position calculation and set
+    let frameVerticalCenter = bubbleDiv.getBoundingClientRect().width / 2;
+    let leftPosition = 0;
+    let positionModifyClass = "";
+    if (selectionClientX + frameVerticalCenter > DOCUMENT_BODY.clientWidth) {
+        positionModifyClass = "right-";
+        leftPosition = selectionBoundingClientRect.right - bubbleDiv.getBoundingClientRect().width;
+    } else {
+        if (frameVerticalCenter > selectionClientX) {
+            leftPosition = selectionBoundingClientRect.left;
+            positionModifyClass = "left-";
+        } else {
+            leftPosition = selectionClientX + DOCUMENT_ELM.scrollLeft - frameVerticalCenter;
+        }
+    }
+    bubbleDiv.style.left = leftPosition + "px";
+
+    // Vertical position calculation and set
+    let topPosition = 0;
+    const TOP_ADJUSTMENT_PX = 12;
+    if (selectionBoundingClientRect.top < bubbleDiv.getBoundingClientRect().height + TOP_ADJUSTMENT_PX) {
+        topPosition = DOCUMENT_ELM.scrollTop + selectionBoundingClientRect.bottom + TOP_ADJUSTMENT_PX;
+        bubbleDiv.classList.add("lower-" + positionModifyClass + "arrow");
+    } else {
+        topPosition = DOCUMENT_ELM.scrollTop + selectionBoundingClientRect.top -
+            (bubbleDiv.getBoundingClientRect().height + TOP_ADJUSTMENT_PX);
+        bubbleDiv.classList.add("upper-" + positionModifyClass + "arrow");
+    }
+    bubbleDiv.style.top = topPosition + "px";
 
     // Display
     bubbleDiv.style.opacity = "1";
@@ -389,7 +396,8 @@ function analyzeMainApiJson(responseJson) {
             } else {
                 // if there is two element, each has own ipa
                 for (let pronunciationsIndex in pronunciations) {
-                    if (!"lang" in pronunciations[pronunciationsIndex] || pronunciations[pronunciationsIndex]["lang"] !== "American English") {
+                    if (!"lang" in pronunciations[pronunciationsIndex]
+                        || pronunciations[pronunciationsIndex]["lang"] !== "American English") {
                         continue;
                     }
                     if ("ipa" in pronunciations[pronunciationsIndex]) {

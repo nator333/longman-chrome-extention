@@ -101,6 +101,48 @@
     border-bottom: 15px solid rgb(168, 168, 168);
 }
 
+.lmd-bubble.lower-left-arrow:before{
+    content: "";
+    position: absolute;
+    top: -29px;
+    left: 3.5%;
+    margin-left: -15px;
+    border: 15px solid transparent;
+    border-bottom: 15px solid white;
+    z-index: 10;
+}
+
+.lmd-bubble.lower-left-arrow:after{
+    content: "";
+    position: absolute;
+    top: -30px;
+    left: 3.5%;
+    margin-left: -15px;
+    border: 15px solid transparent;
+    border-bottom: 15px solid rgb(168, 168, 168);
+}
+
+.lmd-bubble.lower-right-arrow:before{
+    content: "";
+    position: absolute;
+    top: -29px;
+    left: 96.5%;
+    margin-left: -15px;
+    border: 15px solid transparent;
+    border-bottom: 15px solid white;
+    z-index: 10;
+}
+
+.lmd-bubble.lower-right-arrow:after{
+    content: "";
+    position: absolute;
+    top: -30px;
+    left: 96.5%;
+    margin-left: -15px;
+    border: 15px solid transparent;
+    border-bottom: 15px solid rgb(168, 168, 168);
+}
+
 .lmd-bubble.upper-arrow:before{
     content: "";
     position: absolute;
@@ -117,6 +159,48 @@
     position: absolute;
     bottom: -30px;
     left: 50%;
+    margin-left: -15px;
+    border: 15px solid transparent;
+    border-top: 15px solid rgb(168, 168, 168);
+}
+
+.lmd-bubble.upper-left-arrow:before{
+    content: "";
+    position: absolute;
+    bottom: -29px;
+    left: 3.5%;
+    margin-left: -15px;
+    border: 15px solid transparent;
+    border-top: 15px solid white;
+    z-index: 10;
+}
+
+.lmd-bubble.upper-left-arrow:after{
+    content: "";
+    position: absolute;
+    bottom: -30px;
+    left: 3.5%;
+    margin-left: -15px;
+    border: 15px solid transparent;
+    border-top: 15px solid rgb(168, 168, 168);
+}
+
+.lmd-bubble.upper-right-arrow:before{
+    content: "";
+    position: absolute;
+    bottom: -29px;
+    left: 96.5%;
+    margin-left: -15px;
+    border: 15px solid transparent;
+    border-top: 15px solid white;
+    z-index: 10;
+}
+
+.lmd-bubble.upper-right-arrow:after{
+    content: "";
+    position: absolute;
+    bottom: -30px;
+    left: 96.5%;
     margin-left: -15px;
     border: 15px solid transparent;
     border-top: 15px solid rgb(168, 168, 168);

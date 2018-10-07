@@ -39,6 +39,9 @@ function somethingSelected(mouseUpContent) {
             .trim();
 
         if (!selectionTextForCheck || selectionTextForCheck.includes(" ")) {
+            if (isIconAdded && DOCUMENT_BODY.removeChild(ICON_DIV)) {
+                isIconAdded = false;
+            }
             return;
         }
 
@@ -47,10 +50,6 @@ function somethingSelected(mouseUpContent) {
         }
         selectionText = selectionTextForCheck;
         let parentBoundingClientRect = DOCUMENT_BODY.parentNode.getBoundingClientRect();
-
-        if (isIconAdded && DOCUMENT_BODY.removeChild(ICON_DIV)) {
-            isIconAdded = false;
-        }
 
         if (mouseUpContent.target === ICON_DIV) {
             return

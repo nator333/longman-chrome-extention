@@ -31,46 +31,85 @@ function somethingSelected(mouseUpContent) {
         return void(DOCUMENT_BODY.removeChild(bubbleDiv) && (bubbleDiv = null))
     }
 
-    setTimeout(() => {
-        let selectionObj = window.getSelection();
-        let selectionTextForCheck = selectionObj
-            .toString()
-            .replace(/[\.\*\?;!()\+,\[:\]<>^_`\[\]{}~\\\/\"\'=]/g, " ")
-            .trim();
+    if (false) {
+        setTimeout(()=> {
+            displayIcon(mouseUpContent)
+        });
+    } else {
+        setTimeout(()=> {
+            displayBubble(mouseUpContent)
+        });
+    }
+}
 
-        if (!selectionTextForCheck || selectionTextForCheck.includes(" ")) {
-            if (isIconAdded && DOCUMENT_BODY.removeChild(ICON_DIV)) {
-                isIconAdded = false;
-            }
-            return;
+/**
+ *
+ *
+ * @param mouseUpContent
+ */
+function displayIcon(mouseUpContent) {
+    let selectionObj = window.getSelection();
+    let selectionTextForCheck = selectionObj
+        .toString()
+        .replace(/[\.\*\?;!()\+,\[:\]<>^_`\[\]{}~\\\/\"\'=]/g, " ")
+        .trim();
+
+    if (!selectionTextForCheck || selectionTextForCheck.includes(" ")) {
+        if (isIconAdded && DOCUMENT_BODY.removeChild(ICON_DIV)) {
+            isIconAdded = false;
         }
+        return;
+    }
 
-        if (!selectionTextForCheck.endsWith("day")) {
-            selectionTextForCheck = selectionTextForCheck.toLowerCase();
-        }
-        selectionText = selectionTextForCheck;
-        let parentBoundingClientRect = DOCUMENT_BODY.parentNode.getBoundingClientRect();
+    if (!selectionTextForCheck.endsWith("day")) {
+        selectionTextForCheck = selectionTextForCheck.toLowerCase();
+    }
+    selectionText = selectionTextForCheck;
+    let parentBoundingClientRect = DOCUMENT_BODY.parentNode.getBoundingClientRect();
 
-        if (mouseUpContent.target === ICON_DIV) {
-            return
-        }
+    if (mouseUpContent.target === ICON_DIV) {
+        return
+    }
 
-        selectionClientX = mouseUpContent.clientX;
-        selectionBoundingClientRect = selectionObj.getRangeAt(0).getBoundingClientRect();
-        let selectionHeightPlus28 = -1;
-        if (Math.abs(mouseUpContent.clientY - selectionBoundingClientRect.top) >
-            selectionBoundingClientRect.bottom - selectionBoundingClientRect.clientY) {
-            selectionHeightPlus28 = selectionBoundingClientRect.height + 28
-        }
-        ICON_DIV.style.top = selectionBoundingClientRect.bottom - parentBoundingClientRect.top - selectionHeightPlus28 + "px";
-        ICON_DIV.style.left = mouseUpContent.clientX + DOCUMENT_ELM.scrollLeft - 12 + "px";
-        ICON_DIV.addEventListener("click", iconClicked, false);
+    selectionClientX = mouseUpContent.clientX;
+    selectionBoundingClientRect = selectionObj.getRangeAt(0).getBoundingClientRect();
+    let selectionHeightPlus28 = -1;
+    if (Math.abs(mouseUpContent.clientY - selectionBoundingClientRect.top) >
+        selectionBoundingClientRect.bottom - selectionBoundingClientRect.clientY) {
+        selectionHeightPlus28 = selectionBoundingClientRect.height + 28
+    }
+    ICON_DIV.style.top = selectionBoundingClientRect.bottom - parentBoundingClientRect.top - selectionHeightPlus28 + "px";
+    ICON_DIV.style.left = mouseUpContent.clientX + DOCUMENT_ELM.scrollLeft - 12 + "px";
+    ICON_DIV.addEventListener("click", requestMainApi, false);
 
-        if (DOCUMENT_BODY.appendChild(ICON_DIV)) {
-            isIconAdded = true;
-        }
+    if (DOCUMENT_BODY.appendChild(ICON_DIV)) {
+        isIconAdded = true;
+    }
+}
 
-    })
+/**
+ *
+ *
+ * @param mouseUpContent
+ */
+function displayBubble(mouseUpContent) {
+    let selectionObj = window.getSelection();
+    let selectionTextForCheck = selectionObj
+        .toString()
+        .replace(/[\.\*\?;!()\+,\[:\]<>^_`\[\]{}~\\\/\"\'=]/g, " ")
+        .trim();
+
+    if (!selectionTextForCheck || selectionTextForCheck.includes(" ")) {
+        return;
+    }
+
+    if (!selectionTextForCheck.endsWith("day")) {
+        selectionTextForCheck = selectionTextForCheck.toLowerCase();
+    }
+    selectionText = selectionTextForCheck;
+    selectionClientX = mouseUpContent.clientX;
+    selectionBoundingClientRect = selectionObj.getRangeAt(0).getBoundingClientRect();
+    requestMainApi(null);
 }
 
 /**
@@ -78,20 +117,22 @@ function somethingSelected(mouseUpContent) {
  *
  * @param clickContent
  */
-function iconClicked(clickContent) {
-    if (DOCUMENT_BODY.removeChild(ICON_DIV)) {
+function requestMainApi(clickContent) {
+    if (isIconAdded && DOCUMENT_BODY.removeChild(ICON_DIV)) {
         isIconAdded = false;
     }
-    clickContent.stopPropagation();
-    clickContent.preventDefault();
+    if (clickContent) {
+        clickContent.stopPropagation();
+        clickContent.preventDefault();
+    }
 
     // Create a request variable and assign a new XMLHttpRequest object to it.
     let request = new XMLHttpRequest();
     // Open a new connection, using the GET request on the URL endpoint
     request.open('GET', API_DOMAIN + '/v2/dictionaries/ldoce5/entries?limit=5&headword=' + selectionText, true);
 
-    request.addEventListener("load", mainApiLoaded_1, false);
-    request.addEventListener("load", mainApiLoaded_2, false);
+    request.addEventListener("load", useLoadedMainApi, false);
+    request.addEventListener("load", requestSynonymApi, false);
 
     request.send();
 
@@ -100,7 +141,7 @@ function iconClicked(clickContent) {
 /**
  * Fired when API loaded first, display bubble
  */
-function mainApiLoaded_1() {
+function useLoadedMainApi() {
     // Begin accessing JSON data here
     const dataContent = analyzeMainApiJson(JSON.parse(this.response));
     bubbleDiv = document.createElement("div");
@@ -279,31 +320,31 @@ function mainApiLoaded_1() {
 /**
  * Fired when main API loaded after 1st, request by synonym API
  */
-function mainApiLoaded_2() {
+function requestSynonymApi() {
     let synonymRequest = new XMLHttpRequest();
     synonymRequest.open('GET', API_DOMAIN + '/v2/dictionaries/ldoce5/entries?limit=5&synonyms=' + selectionText, true);
-    synonymRequest.addEventListener("load", synonymApiLoaded_1, false);
-    synonymRequest.addEventListener("load", synonymApiLoaded_2, false);
+    synonymRequest.addEventListener("load", useLoadedSynonymApi, false);
+    synonymRequest.addEventListener("load", decideBubblePosition, false);
     synonymRequest.send();
 }
 
 /**
  * Fired when synonym API loaded, update bubble
  */
-function synonymApiLoaded_1() {
+function useLoadedSynonymApi() {
     const dataContent = analyzeSynonymApiJson(JSON.parse(this.response));
     for (let key in dataContent) {
         let synonymsPoses = document.getElementsByClassName(key);
         if (synonymsPoses.length !== 0) {
-            if (synonymsPoses[0].getElementsByTagName("div").length !== 0){
+            if (synonymsPoses[0].getElementsByTagName("div").length !== 0) {
                 synonymsPoses[0].innerHTML += ", ";
             }
             for (let i = 0; i < dataContent[key].length; i++) {
-                if ("headword" in dataContent[key][i]){
+                if ("headword" in dataContent[key][i]) {
                     let synonymDiv = document.createElement("div");
                     synonymDiv.style.display = "inline-block";
                     synonymDiv.innerHTML = dataContent[key][i]["headword"];
-                    if ("definition" in dataContent[key][i]){
+                    if ("definition" in dataContent[key][i]) {
                         synonymDiv.title = dataContent[key][i]["definition"];
                     }
                     synonymsPoses[0].appendChild(synonymDiv);
@@ -320,7 +361,7 @@ function synonymApiLoaded_1() {
 /**
  * Fired when synonym API loaded, decide bubble position
  */
-function synonymApiLoaded_2() {
+function decideBubblePosition() {
     // Horizontal position calculation and set
     let frameVerticalCenter = bubbleDiv.getBoundingClientRect().width / 2;
     let leftPosition = 0;
@@ -467,7 +508,8 @@ function analyzeSynonymApiJson(responseJson) {
             || selectionText === SYNONYM_JSON["headword"]) {
             continue;
         }
-        const SYNONYM_CLASS_STR = "synonyms-" + SYNONYM_JSON["part_of_speech"].replace(/\s+/g, "");;
+        const SYNONYM_CLASS_STR = "synonyms-" + SYNONYM_JSON["part_of_speech"].replace(/\s+/g, "");
+        ;
         if (!(SYNONYM_CLASS_STR in jsonObj)) {
             jsonObj[SYNONYM_CLASS_STR] = [];
         }
@@ -476,7 +518,7 @@ function analyzeSynonymApiJson(responseJson) {
         };
 
         // SENSES
-        if ("senses" in SYNONYM_JSON && SYNONYM_JSON["senses"] instanceof  Array){
+        if ("senses" in SYNONYM_JSON && SYNONYM_JSON["senses"] instanceof Array) {
             for (let key in SYNONYM_JSON["senses"][0]) {
                 if (SYNONYM_JSON["senses"][0][key] instanceof Array) {
                     if (!(SYNONYM_JSON["senses"][0][key][0] instanceof Object)) {

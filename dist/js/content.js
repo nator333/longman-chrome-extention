@@ -6,17 +6,17 @@ const EXAMPLE_PREFIX = "ex) ";
 const DOCUMENT_BODY = document.body;
 const DOCUMENT_ELM = document.documentElement;
 const ICON_DIV = document.createElement("div");
-const DICT_ICON_IMAGE_DIV = document.createElement("div");
+const IMAGE_DIV = document.createElement("div");
 
-let isDicDivAdded = false;
+let isIconAdded = false;
 let bubbleDiv = void 0;
 let selectionText = "";
-let selectedClientX = 0;
+let selectionClientX = 0;
 let selectionBoundingClientRect = void 0;
 
-ICON_DIV.classList.add("longman-dict");
-DICT_ICON_IMAGE_DIV.classList.add("longman-dict-icon");
-ICON_DIV.appendChild(DICT_ICON_IMAGE_DIV);
+ICON_DIV.classList.add("lmd-icon");
+IMAGE_DIV.classList.add("lmd-icon-img");
+ICON_DIV.appendChild(IMAGE_DIV);
 
 DOCUMENT_BODY.addEventListener("mouseup", somethingSelected, false);
 
@@ -48,15 +48,15 @@ function somethingSelected(mouseUpContent) {
         selectionText = selectionTextForCheck;
         let parentBoundingClientRect = DOCUMENT_BODY.parentNode.getBoundingClientRect();
 
-        if (isDicDivAdded && DOCUMENT_BODY.removeChild(ICON_DIV)) {
-            isDicDivAdded = false;
+        if (isIconAdded && DOCUMENT_BODY.removeChild(ICON_DIV)) {
+            isIconAdded = false;
         }
 
         if (mouseUpContent.target === ICON_DIV) {
             return
         }
 
-        selectedClientX = mouseUpContent.clientX;
+        selectionClientX = mouseUpContent.clientX;
         selectionBoundingClientRect = selectionObj.getRangeAt(0).getBoundingClientRect();
         let selectionHeightPlus28 = -1;
         if (Math.abs(mouseUpContent.clientY - selectionBoundingClientRect.top) >
@@ -68,7 +68,7 @@ function somethingSelected(mouseUpContent) {
         ICON_DIV.addEventListener("click", iconClicked, false);
 
         if (DOCUMENT_BODY.appendChild(ICON_DIV)) {
-            isDicDivAdded = true;
+            isIconAdded = true;
         }
 
     })
@@ -81,7 +81,7 @@ function somethingSelected(mouseUpContent) {
  */
 function iconClicked(clickContent) {
     if (DOCUMENT_BODY.removeChild(ICON_DIV)) {
-        isDicDivAdded = false;
+        isIconAdded = false;
     }
     clickContent.stopPropagation();
     clickContent.preventDefault();
@@ -105,7 +105,7 @@ function mainApiLoaded_1() {
     // Begin accessing JSON data here
     const dataContent = analyzeMainApiJson(JSON.parse(this.response));
     bubbleDiv = document.createElement("div");
-    bubbleDiv.classList.add("lmd", "long-man-dict-bubble");
+    bubbleDiv.classList.add("lmd", "lmd-bubble");
     bubbleDiv.width = FRAME_WIDTH + "px";
     bubbleDiv.height = FRAME_HEIGHT + "px";
     bubbleDiv.style.cssText += 'z-index: 999999999 !important;';
@@ -279,14 +279,14 @@ function mainApiLoaded_1() {
     // Horizontal position calculation and set
     let frameVerticalCenter = bubbleDiv.getBoundingClientRect().width / 2;
     let leftPosition = 0;
-    if (selectedClientX + frameVerticalCenter > DOCUMENT_BODY.clientWidth) {
+    if (selectionClientX + frameVerticalCenter > DOCUMENT_BODY.clientWidth) {
         leftPosition = selectionBoundingClientRect.right - bubbleDiv.getBoundingClientRect().width;
     } else {
-        if (frameVerticalCenter > selectedClientX) {
+        if (frameVerticalCenter > selectionClientX) {
             leftPosition = selectionBoundingClientRect.left;
             bubbleDiv.classList.add("left-arrow");
         } else {
-            leftPosition = selectedClientX + DOCUMENT_ELM.scrollLeft - frameVerticalCenter;
+            leftPosition = selectionClientX + DOCUMENT_ELM.scrollLeft - frameVerticalCenter;
             bubbleDiv.classList.add("center-arrow");
         }
     }

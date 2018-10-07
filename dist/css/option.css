@@ -1,0 +1,38 @@
+body {
+    background-color: #eee;
+    font-family: arial,sans-serif;
+    font-size: 13px;
+}
+
+.lmd-option-content {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin: 40px auto 20px;
+    padding: 32px;
+    width: 650px;
+}
+
+label, input[type='checkbox'], input[type='radio'] {
+    cursor: pointer;
+}
+
+h1 {
+    color: #333333;
+    font-size: 1.5em;
+    margin: 0.7em 0;
+    text-align: center;
+}
+
+.option_name {
+    display: table-cell;
+    font-weight: bold;
+    margin-top: 3px;
+    padding-right: 16px;
+    padding-top: 16px;
+    white-space: nowrap;
+}
+
+.option_radios{
+    display: table-cell;
+}

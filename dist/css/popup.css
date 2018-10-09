@@ -36,12 +36,14 @@
 }
 
 .lmd-footer {
-    padding: 10px;
+    padding: 5px;
     text-align: right;
-    background-color: #4b8bda;
+    background-color: #4b8bda2b;
 }
 
 .lmd-a {
-    color: #FFFFFF;
+    color: #000000;
+    font-size: small;
+    margin-right: 10px;
 }
 

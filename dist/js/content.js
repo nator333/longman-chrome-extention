@@ -181,9 +181,9 @@ function useLoadedMainApi() {
     let headwordDiv = document.createElement("div");
     headwordDiv.innerHTML = selectionText;
     headwordDiv.classList.add("lmd");
-    headwordDiv.style.cssText += 'font-size: x-large !important;';
+    headwordDiv.style.cssText += 'font-size: 30px !important;';
     headwordDiv.style.fontWeight = "bold";
-    headwordDiv.style.marginBottom = "8px";
+    headwordDiv.style.color = "blue";
     containerDiv.appendChild(headwordDiv);
     let hr = document.createElement("hr");
     hr.style.margin = "1px";

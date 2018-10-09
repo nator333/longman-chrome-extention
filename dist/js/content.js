@@ -345,15 +345,28 @@ function useLoadedSynonymApi() {
     const dataContent = analyzeSynonymApiJson(JSON.parse(this.response));
     for (let key in dataContent) {
         let synonymsPoses = document.getElementsByClassName(key);
+        let existingSynonyms = [];
         if (synonymsPoses.length !== 0) {
             if (synonymsPoses[0].getElementsByTagName("div").length !== 0) {
-                synonymsPoses[0].innerHTML += ", ";
+                existingSynonyms = synonymsPoses[0].getElementsByTagName("div");
             }
             for (let i = 0; i < dataContent[key].length; i++) {
                 if ("headword" in dataContent[key][i]) {
-                    let synonymDiv = document.createElement("div");
-                    synonymDiv.style.display = "inline-block";
-                    synonymDiv.innerHTML = dataContent[key][i]["headword"];
+                    let synonymDiv = null;
+                    console.log(existingSynonyms.length);
+                    for (let j = 0; j < existingSynonyms.length; j++) {
+                        if (existingSynonyms[j].innerText === dataContent[key][i]["headword"]) {
+                            synonymDiv = existingSynonyms[j];
+                        }
+                    }
+                    if (synonymDiv === null) {
+                        if (i === 0 && existingSynonyms.length !== 0) {
+                            synonymsPoses[0].innerHTML += ", ";
+                        }
+                        synonymDiv = document.createElement("div");
+                        synonymDiv.style.display = "inline-block";
+                        synonymDiv.innerHTML = dataContent[key][i]["headword"];
+                    }
                     if ("definition" in dataContent[key][i]) {
                         synonymDiv.title = dataContent[key][i]["definition"];
                     }

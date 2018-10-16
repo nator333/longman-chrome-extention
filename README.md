@@ -1,6 +1,6 @@
-# longman-chrome-extention
+# longman-chrome-extention [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/nator333/longman-chrome-extention/master/LICENSE)
 
-Search a definition of one selected word from Longman Dictionary of Contemporary English (5th edition)
+Search the definitions of one selected word from Longman Dictionary of Contemporary English (5th edition)
 Show bubble type popup for selected word's detail in Longman dictionary.
 
 This can show clickable icon for the popup in the site whose lang property of <html> tag  includes "en". And also it displays bubble immediately.

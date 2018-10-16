@@ -36,6 +36,12 @@ function somethingSelected(mouseUpContent) {
         return void(DOCUMENT_BODY.removeChild(bubbleDiv) && (bubbleDiv = null))
     }
 
+    if (mouseUpContent.target.tagName && mouseUpContent.target.tagName.toLocaleLowerCase() === "input") {
+        return void(true)
+    } else {
+        console.log(mouseUpContent.target.tagName)
+    }
+
     chrome.storage.local.get(['lmdShowIconFirst'], function (result) {
         console.log('lmdShowIconFirst currently is ' + result.lmdShowIconFirst);
         if (result.lmdShowIconFirst) {

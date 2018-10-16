@@ -19,6 +19,10 @@ IMAGE_DIV.classList.add("lmd-icon-img");
 ICON_DIV.appendChild(IMAGE_DIV);
 
 chrome.storage.local.get(['lmdIsDisable'], function (result) {
+    if (document.documentElement.lang && !document.documentElement.lang.includes("en")) {
+        return;
+    }
+
     if (!result.lmdIsDisable) {
         DOCUMENT_BODY.addEventListener("mouseup", somethingSelected, false);
     }
@@ -35,8 +39,11 @@ function somethingSelected(mouseUpContent) {
         return void(DOCUMENT_BODY.removeChild(bubbleDiv) && (bubbleDiv = null))
     }
 
-    if (mouseUpContent.target.tagName && mouseUpContent.target.tagName.toLocaleLowerCase() === "input") {
-        return
+    if (mouseUpContent.target.tagName) {
+        let lowerTagName = mouseUpContent.target.tagName.toLocaleLowerCase();
+        if (lowerTagName === "input" || lowerTagName === "textarea") {
+            return;
+        }
     }
 
     chrome.storage.local.get(['lmdShowIconFirst'], function (result) {

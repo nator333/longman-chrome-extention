@@ -1,9 +1,9 @@
 {
   "name": "Longman Dictionary Bubble",
   "short_name": "Lmd bubble",
-  "description": "Search word from Longman Dictionary of Contemporary English (5th edition)",
+  "description": "Search a definition from Longman Dictionary of Contemporary English (5th edition)",
   "author": "nator333",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "icons": {
     "16": "icons/Longman16.png",
     "48": "icons/Longman48.png",

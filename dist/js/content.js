@@ -20,7 +20,6 @@ ICON_DIV.appendChild(IMAGE_DIV);
 
 chrome.storage.local.get(['lmdIsDisable'], function (result) {
     if (!result.lmdIsDisable) {
-        console.log('lmdIsDisable currently is ' + result.lmdIsDisable);
         DOCUMENT_BODY.addEventListener("mouseup", somethingSelected, false);
     }
 });
@@ -37,13 +36,10 @@ function somethingSelected(mouseUpContent) {
     }
 
     if (mouseUpContent.target.tagName && mouseUpContent.target.tagName.toLocaleLowerCase() === "input") {
-        return void(true)
-    } else {
-        console.log(mouseUpContent.target.tagName)
+        return
     }
 
     chrome.storage.local.get(['lmdShowIconFirst'], function (result) {
-        console.log('lmdShowIconFirst currently is ' + result.lmdShowIconFirst);
         if (result.lmdShowIconFirst) {
             setTimeout(() => {
                 displayIcon(mouseUpContent)
@@ -359,7 +355,6 @@ function useLoadedSynonymApi() {
             for (let i = 0; i < dataContent[key].length; i++) {
                 if ("headword" in dataContent[key][i]) {
                     let synonymDiv = null;
-                    console.log(existingSynonyms.length);
                     for (let j = 0; j < existingSynonyms.length; j++) {
                         if (existingSynonyms[j].innerText === dataContent[key][i]["headword"]) {
                             synonymDiv = existingSynonyms[j];
@@ -515,7 +510,6 @@ function analyzeMainApiJson(responseJson) {
         jsonAry.push(json);
     }
 
-    console.log(jsonAry);
     return jsonAry;
 }
 
@@ -561,6 +555,5 @@ function analyzeSynonymApiJson(responseJson) {
         jsonObj[SYNONYM_CLASS_STR].push(synonymJson);
     }
 
-    console.log(jsonObj);
     return jsonObj;
 }

@@ -2,12 +2,10 @@ let isDisable = false;
 let showIconFirst = false;
 
 chrome.storage.local.get(['lmdIsDisable'], function (result) {
-    console.log('lmdIsDisable currently is ' + result.lmdIsDisable);
     isDisable = result.lmdIsDisable;
 });
 
 chrome.storage.local.get(['lmdShowIconFirst'], function (result) {
-    console.log('lmdShowIconFirst currently is ' + result.lmdShowIconFirst);
     showIconFirst = result.lmdShowIconFirst;
 });
 
@@ -36,9 +34,7 @@ for (let i = 0; i < radios.length; i++) {
  * @param checkedElement
  */
 function checkboxChanged(checkedElement) {
-    chrome.storage.local.set({lmdIsDisable: checkedElement.target.checked}, function () {
-        console.log('lmdIsDisable updated ' + checkedElement.target.checked);
-    });
+    chrome.storage.local.set({lmdIsDisable: checkedElement.target.checked}, () => {});
     for (let i = 0; i < radios.length; i++) {
         radios[i].disabled = checkedElement.target.checked
     }
@@ -51,18 +47,10 @@ function checkboxChanged(checkedElement) {
  */
 function radioClicked(clickedElement) {
     if (clickedElement.target.value === "1") {
-        chrome.storage.local.set({lmdIsDisable: false}, function () {
-            console.log('lmdIsDisable updated false');
-        });
-        chrome.storage.local.set({lmdShowIconFirst: true}, function () {
-            console.log('lmdShowIconFirst updated true');
-        });
+        chrome.storage.local.set({lmdIsDisable: false}, ()=>{});
+        chrome.storage.local.set({lmdShowIconFirst: true}, ()=>{});
     } else {
-        chrome.storage.local.set({lmdIsDisable: false}, function () {
-            console.log('lmdIsDisable updated false');
-        });
-        chrome.storage.local.set({lmdShowIconFirst: false}, function () {
-            console.log('lmdShowIconFirst updated false');
-        });
+        chrome.storage.local.set({lmdIsDisable: false}, ()=>{});
+        chrome.storage.local.set({lmdShowIconFirst: false}, ()=>{});
     }
 }

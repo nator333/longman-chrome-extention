@@ -7,6 +7,7 @@ const DOCUMENT_BODY = document.body;
 const DOCUMENT_ELM = document.documentElement;
 const ICON_DIV = document.createElement("div");
 const IMAGE_DIV = document.createElement("div");
+const BUBBLE_DIVS = [];
 
 let isIconAdded = false;
 let bubbleDiv = void 0;
@@ -36,7 +37,13 @@ chrome.storage.local.get(['lmdIsDisable'], function (result) {
  */
 function somethingSelected(mouseUpContent) {
     if (bubbleDiv && !mouseUpContent.target["classList"].contains('lmd')) {
-        return void(DOCUMENT_BODY.removeChild(bubbleDiv) && (bubbleDiv = null))
+        BUBBLE_DIVS.forEach((bubble) => {
+            if (DOCUMENT_BODY.contains(bubble)) {
+                DOCUMENT_BODY.removeChild(bubble);
+                bubbleDiv = null;
+            }
+        });
+        return void (BUBBLE_DIVS.length = 0);
     }
 
     if (mouseUpContent.target.tagName) {
@@ -164,6 +171,9 @@ function useLoadedMainApi() {
     // Begin accessing JSON data here
     const dataContent = analyzeMainApiJson(JSON.parse(this.response));
     bubbleDiv = document.createElement("div");
+    BUBBLE_DIVS.push(bubbleDiv);
+    const BUBBLE_DIV_ID_PREFIX = "lmd-bubble";
+    bubbleDiv.id = BUBBLE_DIV_ID_PREFIX + "-" + BUBBLE_DIVS.length;
     bubbleDiv.classList.add("lmd", "lmd-bubble");
     bubbleDiv.width = FRAME_WIDTH + "px";
     bubbleDiv.height = FRAME_HEIGHT + "px";
@@ -174,10 +184,20 @@ function useLoadedMainApi() {
 
     // close btn
     let closeBtn = document.createElement("div");
-    closeBtn.classList.add("lmd", "lmd-close-btn");
+    const CLOSE_BTN_ID_PREFIX = "lmd-close-btn";
+    closeBtn.classList.add("lmd", CLOSE_BTN_ID_PREFIX);
+    closeBtn.id = CLOSE_BTN_ID_PREFIX + "-" + BUBBLE_DIVS.length;
     closeBtn.addEventListener("click",
-        () => {
-            return void(DOCUMENT_BODY.removeChild(bubbleDiv) && (bubbleDiv = null))
+        (clickedBtn) => {
+            const BUBBLE_DIV_ID = BUBBLE_DIV_ID_PREFIX + clickedBtn.target.id.replace(CLOSE_BTN_ID_PREFIX, "");
+            BUBBLE_DIVS.forEach((bubble) => {
+                if (bubble.id === BUBBLE_DIV_ID && DOCUMENT_BODY.contains(bubble)) {
+                    DOCUMENT_BODY.removeChild(bubble);
+                    bubbleDiv = null;
+                    return true;
+                }
+            });
+            return void true
         }, false);
     bubbleDiv.appendChild(closeBtn);
 

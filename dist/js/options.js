@@ -1,8 +1,22 @@
+// Load Chrome Storage
 chrome.storage.local.get(['lmdIsDisable'], function (result) {
     document.getElementById("lmd-isDisable").checked = result.lmdIsDisable;
 });
 
 chrome.storage.local.get(['lmdShowIconFirst'], function (result) {
+    let radios = document.getElementsByName("lmd-option");
+    if (result.lmdShowIconFirst) {
+        for (let i = 0; i < radios.length; i++) {
+            radios[i].checked = radios[i].value === "1";
+        }
+    } else {
+        for (let i = 0; i < radios.length; i++) {
+            radios[i].checked = radios[i].value === "2";
+        }
+    }
+});
+
+chrome.storage.local.get(['lmdPronunciation'], function (result) {
     let radios = document.getElementsByName("lmd-option");
     if (result.lmdShowIconFirst) {
         for (let i = 0; i < radios.length; i++) {

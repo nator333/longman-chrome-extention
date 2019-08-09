@@ -1,8 +1,8 @@
 # longman-chrome-extention [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/nator333/longman-chrome-extention/master/LICENSE)
 
-## Thank you for using! 1,000 people are using in all over the world!!🎊㊗️🎊㊗️🎊
+## hank you for using! 1,000 people are using in all over the world!!🎊㊗️🎊
 
-More than 1,000 people are using this Chrome extension at this moment! I here show my gratitude for everyone using it and having given some great ideas for the improvement! Please feel free to let me know any thoughts about it in the Chtome webstore👍
+More than 1,000 people are using this Chrome extension at this moment! I here show my gratitude for the people developed Longman Dictionary and the Web API used in this extension as well as everyone using it and having given some great ideas for the improvement! Please feel free to let me know any thoughts about it in the Chtome webstore👍
 
 ## About
 Search the definitions of one selected word from Longman Dictionary of Contemporary English (5th edition)

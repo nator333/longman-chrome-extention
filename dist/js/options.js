@@ -1,70 +1,58 @@
-// Load Chrome Storage
-chrome.storage.local.get(['lmdIsDisable'], function (result) {
-    document.getElementById("lmd-isDisable").checked = result.lmdIsDisable;
+chrome.storage.local.get(['lmdIsDisable']).then((result) => {
+    const disableCheckbox = document.getElementById("lmd-isDisable");
+    if (disableCheckbox) {
+        disableCheckbox.checked = result.lmdIsDisable || false;
+    }
 });
-
-chrome.storage.local.get(['lmdShowIconFirst'], function (result) {
-    let radios = document.getElementsByName("lmd-option");
+chrome.storage.local.get(['lmdShowIconFirst']).then((result) => {
+    const radios = document.getElementsByName("lmd-option");
     if (result.lmdShowIconFirst) {
         for (let i = 0; i < radios.length; i++) {
             radios[i].checked = radios[i].value === "1";
         }
-    } else {
+    }
+    else {
         for (let i = 0; i < radios.length; i++) {
             radios[i].checked = radios[i].value === "2";
         }
     }
 });
-
-chrome.storage.local.get(['lmdPronunciation'], function (result) {
-    let radios = document.getElementsByName("lmd-option");
+chrome.storage.local.get(['lmdPronunciation']).then((result) => {
+    const radios = document.getElementsByName("lmd-option");
     if (result.lmdShowIconFirst) {
         for (let i = 0; i < radios.length; i++) {
             radios[i].checked = radios[i].value === "1";
         }
-    } else {
+    }
+    else {
         for (let i = 0; i < radios.length; i++) {
             radios[i].checked = radios[i].value === "2";
         }
     }
 });
-
-// AddEventListener
-document.getElementById("lmd-isDisable").addEventListener("change", checkboxChanged);
-let radios = document.getElementsByName("lmd-option");
+document.getElementById("lmd-isDisable")?.addEventListener("change", checkboxChanged);
+const radios = document.getElementsByName("lmd-option");
 for (let i = 0; i < radios.length; i++) {
     radios[i].addEventListener("click", radioClicked);
 }
-
-/**
- * When checkbox clicked
- *
- * @param checkedElement
- */
-function checkboxChanged(checkedElement) {
-    chrome.storage.local.set({lmdIsDisable: checkedElement.target.checked}, () => {
-    });
-    let radios = document.getElementsByName("lmd-option");
-    for (let i = 0; i < radios.length; i++) {
-        radios[i].disabled = checkedElement.target.checked
+function checkboxChanged(event) {
+    const target = event.target;
+    chrome.storage.local.set({ lmdIsDisable: target.checked });
+    const radioElements = document.getElementsByName("lmd-option");
+    for (let i = 0; i < radioElements.length; i++) {
+        radioElements[i].disabled = target.checked;
     }
 }
-
-/**
- * When radio clicked
- *
- * @param clickedElement
- */
-function radioClicked(clickedElement) {
-    if (clickedElement.target.value === "1") {
-        chrome.storage.local.set({lmdIsDisable: false}, () => {
-        });
-        chrome.storage.local.set({lmdShowIconFirst: true}, () => {
-        });
-    } else {
-        chrome.storage.local.set({lmdIsDisable: false}, () => {
-        });
-        chrome.storage.local.set({lmdShowIconFirst: false}, () => {
-        });
+function radioClicked(event) {
+    const target = event.target;
+    if (target.value === "1") {
+        chrome.storage.local.set({ lmdIsDisable: false });
+        chrome.storage.local.set({ lmdShowIconFirst: true });
+    }
+    else {
+        chrome.storage.local.set({ lmdIsDisable: false });
+        chrome.storage.local.set({ lmdShowIconFirst: false });
     }
 }
+export {};
+//# sourceMappingURL=options.js.map

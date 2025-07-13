@@ -1,0 +1,33 @@
+{
+  "name": "longman-dictionary-extension",
+  "version": "2.0.0",
+  "description": "Longman Dictionary Bubble Chrome Extension",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "clean": "rm -rf dist/js/*.js dist/js/*.js.map",
+    "type-check": "tsc --noEmit",
+    "dev": "tsc --watch",
+    "build:prod": "tsc --removeComments --sourceMap false",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "format": "prettier --write src/**/*.ts",
+    "check": "yarn type-check && yarn lint"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.270",
+    "@typescript-eslint/eslint-plugin": "^8.36.0",
+    "@typescript-eslint/parser": "^8.36.0",
+    "eslint": "^8.45.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.0.0"
+  },
+  "keywords": [
+    "chrome-extension",
+    "dictionary",
+    "typescript"
+  ],
+  "author": "nator333",
+  "license": "MIT"
+}

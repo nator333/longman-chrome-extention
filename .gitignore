@@ -91,3 +91,4 @@ temp/
 # Chrome extension specific
 *.crx
 *.pem
+dist.zip

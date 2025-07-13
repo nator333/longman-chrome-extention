@@ -6,11 +6,11 @@ document.getElementById("lmd-text-input")?.addEventListener("keypress", enterSea
 function search(): void {
     const textInput = document.getElementById("lmd-text-input") as HTMLInputElement;
     if (!textInput) return;
-    
+
     const searchTerm: string = textInput.value
         .replace(/[\.\*\?;!()\+,\[:\]<>^_`\[\]{}~\\\/\"\'=]/g, " ")
         .trim();
-    
+
     chrome.tabs.create({
         active: true,
         url: lmdUtl + searchTerm

@@ -1,4 +1,4 @@
-import { StorageResult } from './types.js';
+import { StorageResult } from './types';
 
 // Load Chrome Storage
 chrome.storage.local.get(['lmdIsDisable']).then((result: StorageResult) => {
@@ -47,7 +47,7 @@ for (let i = 0; i < radios.length; i++) {
 function checkboxChanged(event: Event): void {
     const target = event.target as HTMLInputElement;
     chrome.storage.local.set({lmdIsDisable: target.checked});
-    
+
     const radioElements = document.getElementsByName("lmd-option") as NodeListOf<HTMLInputElement>;
     for (let i = 0; i < radioElements.length; i++) {
         radioElements[i].disabled = target.checked;
@@ -59,7 +59,7 @@ function checkboxChanged(event: Event): void {
  */
 function radioClicked(event: Event): void {
     const target = event.target as HTMLInputElement;
-    
+
     if (target.value === "1") {
         chrome.storage.local.set({lmdIsDisable: false});
         chrome.storage.local.set({lmdShowIconFirst: true});

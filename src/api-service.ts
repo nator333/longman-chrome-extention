@@ -2,9 +2,9 @@
  * API service for dictionary lookups
  */
 
-import { DictionaryApiResponse, ProcessedDictionaryEntry, SynonymCollection } from './types.js';
-import { API_ENDPOINTS } from './constants.js';
-import { logger } from './utils.js';
+import { DictionaryApiResponse, ProcessedDictionaryEntry, SynonymCollection } from './types';
+import { API_ENDPOINTS } from './constants';
+import { logger } from './utils';
 
 export class DictionaryApiService {
   private static readonly MAIN_API_ENDPOINT = `${API_ENDPOINTS.PEARSON_DOMAIN}/v2/dictionaries/ldoce5/entries`;
@@ -20,7 +20,7 @@ export class DictionaryApiService {
 
       const response = await this.makeRequest(url);
       const data: DictionaryApiResponse = await response.json();
-      
+
       return this.processMainApiResponse(data, word);
     } catch (error) {
       logger.error('Failed to fetch main dictionary data', error);
@@ -38,7 +38,7 @@ export class DictionaryApiService {
 
       const response = await this.makeRequest(url);
       const data: DictionaryApiResponse = await response.json();
-      
+
       return this.processSynonymApiResponse(data, word);
     } catch (error) {
       logger.error('Failed to fetch synonym data', error);
@@ -87,7 +87,7 @@ export class DictionaryApiService {
     searchWord: string
   ): ProcessedDictionaryEntry[] {
     const results: ProcessedDictionaryEntry[] = [];
-    
+
     if (!responseJson.total || responseJson.total === 0) {
       logger.debug('No results found for word', { searchWord });
       return results;

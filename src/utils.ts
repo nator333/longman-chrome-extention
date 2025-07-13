@@ -47,17 +47,17 @@ export function createElement<K extends keyof HTMLElementTagNameMap>(
   attributes?: Record<string, string>
 ): HTMLElementTagNameMap[K] {
   const element = document.createElement(tagName);
-  
+
   if (classes) {
     element.classList.add(...classes);
   }
-  
+
   if (attributes) {
     Object.entries(attributes).forEach(([key, value]) => {
       element.setAttribute(key, value);
     });
   }
-  
+
   return element;
 }
 
@@ -102,15 +102,15 @@ export const logger = {
       console.debug(`[LMD Debug] ${message}`, ...args);
     }
   },
-  
+
   info: (message: string, ...args: any[]): void => {
     console.info(`[LMD Info] ${message}`, ...args);
   },
-  
+
   warn: (message: string, ...args: any[]): void => {
     console.warn(`[LMD Warning] ${message}`, ...args);
   },
-  
+
   error: (message: string, error?: any): void => {
     console.error(`[LMD Error] ${message}`, error);
   }

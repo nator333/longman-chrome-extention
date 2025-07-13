@@ -4,12 +4,13 @@
   "description": "Longman Dictionary Bubble Chrome Extension",
   "private": true,
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc --watch",
+    "build": "ts-node --project tsconfig.webpack.json node_modules/webpack/bin/webpack.js",
+    "build:tsc": "tsc",
+    "watch": "ts-node --project tsconfig.webpack.json node_modules/webpack/bin/webpack.js --watch",
     "clean": "rm -rf dist/js/*.js dist/js/*.js.map",
     "type-check": "tsc --noEmit",
-    "dev": "tsc --watch",
-    "build:prod": "tsc --removeComments --sourceMap false",
+    "dev": "ts-node --project tsconfig.webpack.json node_modules/webpack/bin/webpack.js --watch --mode development",
+    "build:prod": "ts-node --project tsconfig.webpack.json node_modules/webpack/bin/webpack.js --mode production",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
     "format": "prettier --write src/**/*.ts",
@@ -18,11 +19,18 @@
   },
   "devDependencies": {
     "@types/chrome": "^0.0.270",
+    "@types/node": "^20.11.0",
+    "@types/webpack": "^5.28.5",
     "@typescript-eslint/eslint-plugin": "^8.36.0",
     "@typescript-eslint/parser": "^8.36.0",
     "eslint": "^8.45.0",
+    "glob": "^10.3.10",
     "prettier": "^3.0.0",
-    "typescript": "^5.0.0"
+    "ts-loader": "^9.5.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.0.0",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4"
   },
   "keywords": [
     "chrome-extension",

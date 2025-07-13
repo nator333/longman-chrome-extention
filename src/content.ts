@@ -1,5 +1,5 @@
-import { ProcessedDictionaryEntry, SynonymCollection } from './types.js';
-import { FRAME_DIMENSIONS, CSS_CLASSES, UI_CONSTANTS, STORAGE_KEYS, ID_PREFIXES } from './constants.js';
+import { ProcessedDictionaryEntry, SynonymCollection } from './types';
+import { FRAME_DIMENSIONS, CSS_CLASSES, UI_CONSTANTS, STORAGE_KEYS, ID_PREFIXES } from './constants';
 import { 
   cleanSelectedText, 
   isInputElement, 
@@ -8,8 +8,8 @@ import {
   safeRemoveElement,
   logger,
   isHTMLElement 
-} from './utils.js';
-import { DictionaryApiService } from './api-service.js';
+} from './utils';
+import { DictionaryApiService } from './api-service';
 
 class LongmanDictionaryExtension {
   private readonly documentBody: HTMLElement = document.body;
@@ -38,7 +38,7 @@ class LongmanDictionaryExtension {
   private async initialize(): Promise<void> {
     try {
       const result = await chrome.storage.local.get([STORAGE_KEYS.IS_DISABLE]);
-      
+
       if (this.documentElement.lang && !this.documentElement.lang.includes('en')) {
         logger.debug('Page language is not English, extension disabled');
         return;
@@ -58,7 +58,7 @@ class LongmanDictionaryExtension {
    */
   private async handleMouseUp(event: MouseEvent): Promise<void> {
     const target = event.target as HTMLElement;
-    
+
     if (this.bubbleDiv && !target.classList.contains(CSS_CLASSES.LMD)) {
       this.closeAllBubbles();
       return;
@@ -70,7 +70,7 @@ class LongmanDictionaryExtension {
 
     try {
       const result = await chrome.storage.local.get([STORAGE_KEYS.SHOW_ICON_FIRST]);
-      
+
       if (result[STORAGE_KEYS.SHOW_ICON_FIRST]) {
         setTimeout(() => this.displayIcon(event), 10);
       } else {
@@ -118,7 +118,7 @@ class LongmanDictionaryExtension {
 
     this.documentBody.appendChild(this.iconDiv);
     this.isIconAdded = true;
-    
+
     logger.debug('Icon displayed for word', { word: cleanedText });
   }
 
@@ -187,7 +187,7 @@ class LongmanDictionaryExtension {
   private async requestDictionaryData(): Promise<void> {
     try {
       logger.debug('Requesting dictionary data', { word: this.selectionText });
-      
+
       const [mainData, synonymData] = await Promise.allSettled([
         DictionaryApiService.fetchMainDictionary(this.selectionText),
         DictionaryApiService.fetchSynonyms(this.selectionText)
@@ -240,7 +240,7 @@ class LongmanDictionaryExtension {
     const containerDiv = this.createContentContainer();
 
     this.addHeadword(containerDiv);
-    
+
     const errorDiv = createElement('div', [CSS_CLASSES.LMD]);
     errorDiv.innerHTML = 'Failed to load dictionary data. Please try again.';
     errorDiv.style.color = 'red';
@@ -260,7 +260,7 @@ class LongmanDictionaryExtension {
   private createBubbleContainer(): HTMLDivElement {
     const bubble = createElement('div', [CSS_CLASSES.LMD, CSS_CLASSES.LMD_BUBBLE]);
     this.bubbleDivs.push(bubble);
-    
+
     bubble.id = `${ID_PREFIXES.BUBBLE_DIV}-${this.bubbleDivs.length}`;
     bubble.style.width = `${FRAME_DIMENSIONS.WIDTH}px`;
     bubble.style.height = `${FRAME_DIMENSIONS.HEIGHT}px`;
@@ -279,11 +279,11 @@ class LongmanDictionaryExtension {
   private addCloseButton(bubble: HTMLDivElement): void {
     const closeBtn = createElement('div', [CSS_CLASSES.LMD, CSS_CLASSES.LMD_CLOSE_BTN]);
     closeBtn.id = `${ID_PREFIXES.CLOSE_BTN}-${this.bubbleDivs.length}`;
-    
+
     closeBtn.addEventListener('click', (event) => {
       const target = event.target as HTMLElement;
       const bubbleId = `${ID_PREFIXES.BUBBLE_DIV}${target.id.replace(ID_PREFIXES.CLOSE_BTN, '')}`;
-      
+
       this.bubbleDivs.forEach((bubbleElement) => {
         if (bubbleElement.id === bubbleId) {
           safeRemoveElement(bubbleElement, this.documentBody);
@@ -367,11 +367,11 @@ class LongmanDictionaryExtension {
     const posDiv = createElement('div', [CSS_CLASSES.LMD]);
     const posStr = entry.partOfSpeech!;
     posDiv.innerHTML = `- ${posStr.charAt(0).toUpperCase()}${posStr.slice(1)}`;
-    
+
     if (entry.grammaticalInfo) {
       posDiv.innerHTML += ` (${entry.grammaticalInfo})`;
     }
-    
+
     posDiv.style.fontStyle = 'italic';
     posDiv.style.display = 'inline-block';
     posDiv.style.paddingRight = '15px';
@@ -457,11 +457,11 @@ class LongmanDictionaryExtension {
   ): void {
     const synonymsDiv = createElement('div', [CSS_CLASSES.LMD]);
     synonymsDiv.innerHTML = 'Synonyms: ';
-    
+
     if (entry.partOfSpeech) {
       const synonymClass = `synonyms-${entry.partOfSpeech.replace(/\s+/g, '')}`;
       synonymsDiv.classList.add(synonymClass);
-      
+
       // Add synonyms from API data
       if (synonymData[synonymClass] && synonymData[synonymClass].length > 0) {
         synonymData[synonymClass].forEach((synonym: any, index: number) => {
@@ -471,26 +471,26 @@ class LongmanDictionaryExtension {
             synonymSpan.title = synonym.definition;
           }
           synonymsDiv.appendChild(synonymSpan);
-          
+
           if (index < synonymData[synonymClass].length - 1) {
             synonymsDiv.appendChild(document.createTextNode(', '));
           }
         });
       }
     }
-    
+
     synonymsDiv.style.fontStyle = 'italic';
     synonymsDiv.style.paddingLeft = '15px';
     synonymsDiv.style.color = '#6b6060';
     synonymsDiv.style.display = entry.synonym || synonymData[`synonyms-${entry.partOfSpeech?.replace(/\s+/g, '') || ''}`] ? '' : 'none';
-    
+
     if (entry.synonym) {
       const synonymDiv = createElement('div');
       synonymDiv.style.display = 'inline-block';
       synonymDiv.innerHTML = entry.synonym;
       synonymsDiv.appendChild(synonymDiv);
     }
-    
+
     container.appendChild(synonymsDiv);
   }
 
@@ -561,7 +561,7 @@ class LongmanDictionaryExtension {
 
     this.bubbleDiv.style.top = `${topPosition}px`;
     this.bubbleDiv.style.opacity = '1';
-    
+
     logger.debug('Bubble positioned', { position: { left: leftPosition, top: topPosition } });
   }
 }

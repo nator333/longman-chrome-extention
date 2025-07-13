@@ -1,25 +1,28 @@
-"use strict";
-const lmdUtl = "https://www.ldoceonline.com/dictionary/";
+const lmdUtl: string = "https://www.ldoceonline.com/dictionary/";
+
 document.getElementById("lmd-search-btn")?.addEventListener("click", search);
 document.getElementById("lmd-text-input")?.addEventListener("keypress", enterSearch);
-function search() {
-    const textInput = document.getElementById("lmd-text-input");
-    if (!textInput)
-        return;
-    const searchTerm = textInput.value
+
+function search(): void {
+    const textInput = document.getElementById("lmd-text-input") as HTMLInputElement;
+    if (!textInput) return;
+    
+    const searchTerm: string = textInput.value
         .replace(/[\.\*\?;!()\+,\[:\]<>^_`\[\]{}~\\\/\"\'=]/g, " ")
         .trim();
+    
     chrome.tabs.create({
         active: true,
         url: lmdUtl + searchTerm
     });
 }
-function enterSearch(event) {
+
+function enterSearch(event: KeyboardEvent): void {
     if (event.defaultPrevented) {
         return;
     }
+
     if (event.key === "Enter") {
         search();
     }
 }
-//# sourceMappingURL=popup.js.map

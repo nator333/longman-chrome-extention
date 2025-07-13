@@ -1,3 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 chrome.storage.local.get(['lmdIsDisable']).then((result) => {
     const disableCheckbox = document.getElementById("lmd-isDisable");
     if (disableCheckbox) {
@@ -54,5 +56,4 @@ function radioClicked(event) {
         chrome.storage.local.set({ lmdShowIconFirst: false });
     }
 }
-export {};
 //# sourceMappingURL=options.js.map

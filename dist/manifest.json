@@ -1,4 +1,5 @@
 {
+  "manifest_version": 3,
   "name": "Longman Dictionary Bubble",
   "short_name": "Lmd bubble",
   "description": "Search a definition from Longman Dictionary of Contemporary English (5th edition)",
@@ -19,9 +20,17 @@
   ],
   "action": {
     "default_title": "Longman Dictionary Bubble",
-    "default_popup": "pages/popup.html"
+    "default_popup": "pages/popup.html",
+    "default_icon": {
+      "16": "icons/Longman16.png",
+      "48": "icons/Longman48.png",
+      "128": "icons/Longman128.png"
+    }
   },
-  "options_page": "pages/options.html",
+  "options_ui": {
+    "page": "pages/options.html",
+    "open_in_tab": true
+  },
   "content_scripts": [
     {
       "js": [
@@ -37,8 +46,13 @@
       "all_frames": true
     }
   ],
-  "manifest_version": 3,
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'"
-  }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["icons/*", "css/*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }

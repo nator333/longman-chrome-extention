@@ -1,6 +1,8 @@
-import { FRAME_DIMENSIONS, CSS_CLASSES, UI_CONSTANTS, STORAGE_KEYS, ID_PREFIXES } from './constants.js';
-import { cleanSelectedText, isInputElement, getWindowSelection, createElement, safeRemoveElement, logger, isHTMLElement } from './utils.js';
-import { DictionaryApiService } from './api-service.js';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const constants_js_1 = require("./constants.js");
+const utils_js_1 = require("./utils.js");
+const api_service_js_1 = require("./api-service.js");
 class LongmanDictionaryExtension {
     constructor() {
         this.documentBody = document.body;
@@ -11,39 +13,39 @@ class LongmanDictionaryExtension {
         this.selectionText = '';
         this.selectionClientX = 0;
         this.selectionBoundingClientRect = undefined;
-        this.iconDiv = createElement('div', [CSS_CLASSES.LMD_ICON]);
-        this.imageDiv = createElement('div', [CSS_CLASSES.LMD_ICON_IMG]);
+        this.iconDiv = (0, utils_js_1.createElement)('div', [constants_js_1.CSS_CLASSES.LMD_ICON]);
+        this.imageDiv = (0, utils_js_1.createElement)('div', [constants_js_1.CSS_CLASSES.LMD_ICON_IMG]);
         this.iconDiv.appendChild(this.imageDiv);
         this.initialize();
     }
     async initialize() {
         try {
-            const result = await chrome.storage.local.get([STORAGE_KEYS.IS_DISABLE]);
+            const result = await chrome.storage.local.get([constants_js_1.STORAGE_KEYS.IS_DISABLE]);
             if (this.documentElement.lang && !this.documentElement.lang.includes('en')) {
-                logger.debug('Page language is not English, extension disabled');
+                utils_js_1.logger.debug('Page language is not English, extension disabled');
                 return;
             }
-            if (!result[STORAGE_KEYS.IS_DISABLE]) {
+            if (!result[constants_js_1.STORAGE_KEYS.IS_DISABLE]) {
                 this.documentBody.addEventListener('mouseup', this.handleMouseUp.bind(this), false);
-                logger.debug('Extension initialized and event listeners attached');
+                utils_js_1.logger.debug('Extension initialized and event listeners attached');
             }
         }
         catch (error) {
-            logger.error('Failed to initialize extension', error);
+            utils_js_1.logger.error('Failed to initialize extension', error);
         }
     }
     async handleMouseUp(event) {
         const target = event.target;
-        if (this.bubbleDiv && !target.classList.contains(CSS_CLASSES.LMD)) {
+        if (this.bubbleDiv && !target.classList.contains(constants_js_1.CSS_CLASSES.LMD)) {
             this.closeAllBubbles();
             return;
         }
-        if (isInputElement(target)) {
+        if ((0, utils_js_1.isInputElement)(target)) {
             return;
         }
         try {
-            const result = await chrome.storage.local.get([STORAGE_KEYS.SHOW_ICON_FIRST]);
-            if (result[STORAGE_KEYS.SHOW_ICON_FIRST]) {
+            const result = await chrome.storage.local.get([constants_js_1.STORAGE_KEYS.SHOW_ICON_FIRST]);
+            if (result[constants_js_1.STORAGE_KEYS.SHOW_ICON_FIRST]) {
                 setTimeout(() => this.displayIcon(event), 10);
             }
             else {
@@ -51,21 +53,21 @@ class LongmanDictionaryExtension {
             }
         }
         catch (error) {
-            logger.error('Failed to handle mouse up event', error);
+            utils_js_1.logger.error('Failed to handle mouse up event', error);
         }
     }
     closeAllBubbles() {
         this.bubbleDivs.forEach((bubble) => {
-            safeRemoveElement(bubble, this.documentBody);
+            (0, utils_js_1.safeRemoveElement)(bubble, this.documentBody);
         });
         this.bubbleDivs.length = 0;
         this.bubbleDiv = undefined;
     }
     displayIcon(mouseUpEvent) {
-        const selection = getWindowSelection();
+        const selection = (0, utils_js_1.getWindowSelection)();
         if (!selection)
             return;
-        const cleanedText = cleanSelectedText(selection.toString());
+        const cleanedText = (0, utils_js_1.cleanSelectedText)(selection.toString());
         if (!cleanedText) {
             this.hideIcon();
             return;
@@ -80,7 +82,7 @@ class LongmanDictionaryExtension {
         this.iconDiv.addEventListener('click', this.handleIconClick.bind(this), false);
         this.documentBody.appendChild(this.iconDiv);
         this.isIconAdded = true;
-        logger.debug('Icon displayed for word', { word: cleanedText });
+        utils_js_1.logger.debug('Icon displayed for word', { word: cleanedText });
     }
     positionIcon(mouseUpEvent) {
         if (!this.selectionBoundingClientRect)
@@ -89,24 +91,24 @@ class LongmanDictionaryExtension {
         let selectionHeightOffset = -1;
         if (Math.abs(mouseUpEvent.clientY - this.selectionBoundingClientRect.top) >
             this.selectionBoundingClientRect.bottom - mouseUpEvent.clientY) {
-            selectionHeightOffset = this.selectionBoundingClientRect.height + UI_CONSTANTS.SELECTION_HEIGHT_OFFSET;
+            selectionHeightOffset = this.selectionBoundingClientRect.height + constants_js_1.UI_CONSTANTS.SELECTION_HEIGHT_OFFSET;
         }
         this.iconDiv.style.top =
             `${this.selectionBoundingClientRect.bottom - parentRect.top - selectionHeightOffset}px`;
         this.iconDiv.style.left =
-            `${mouseUpEvent.clientX + this.documentElement.scrollLeft - UI_CONSTANTS.ICON_OFFSET}px`;
+            `${mouseUpEvent.clientX + this.documentElement.scrollLeft - constants_js_1.UI_CONSTANTS.ICON_OFFSET}px`;
     }
     hideIcon() {
         if (this.isIconAdded) {
-            safeRemoveElement(this.iconDiv, this.documentBody);
+            (0, utils_js_1.safeRemoveElement)(this.iconDiv, this.documentBody);
             this.isIconAdded = false;
         }
     }
     displayBubble(mouseUpEvent) {
-        const selection = getWindowSelection();
+        const selection = (0, utils_js_1.getWindowSelection)();
         if (!selection)
             return;
-        const cleanedText = cleanSelectedText(selection.toString());
+        const cleanedText = (0, utils_js_1.cleanSelectedText)(selection.toString());
         if (!cleanedText || cleanedText.includes(' ')) {
             return;
         }
@@ -123,17 +125,17 @@ class LongmanDictionaryExtension {
     }
     async requestDictionaryData() {
         try {
-            logger.debug('Requesting dictionary data', { word: this.selectionText });
+            utils_js_1.logger.debug('Requesting dictionary data', { word: this.selectionText });
             const [mainData, synonymData] = await Promise.allSettled([
-                DictionaryApiService.fetchMainDictionary(this.selectionText),
-                DictionaryApiService.fetchSynonyms(this.selectionText)
+                api_service_js_1.DictionaryApiService.fetchMainDictionary(this.selectionText),
+                api_service_js_1.DictionaryApiService.fetchSynonyms(this.selectionText)
             ]);
             const processedMainData = mainData.status === 'fulfilled' ? mainData.value : [];
             const processedSynonymData = synonymData.status === 'fulfilled' ? synonymData.value : {};
             this.displayDictionaryBubble(processedMainData, processedSynonymData);
         }
         catch (error) {
-            logger.error('Failed to fetch dictionary data', error);
+            utils_js_1.logger.error('Failed to fetch dictionary data', error);
             this.displayErrorBubble();
         }
     }
@@ -156,7 +158,7 @@ class LongmanDictionaryExtension {
         this.bubbleDiv = this.createBubbleContainer();
         const containerDiv = this.createContentContainer();
         this.addHeadword(containerDiv);
-        const errorDiv = createElement('div', [CSS_CLASSES.LMD]);
+        const errorDiv = (0, utils_js_1.createElement)('div', [constants_js_1.CSS_CLASSES.LMD]);
         errorDiv.innerHTML = 'Failed to load dictionary data. Please try again.';
         errorDiv.style.color = 'red';
         containerDiv.appendChild(errorDiv);
@@ -166,11 +168,11 @@ class LongmanDictionaryExtension {
         setTimeout(() => this.positionBubble(), 50);
     }
     createBubbleContainer() {
-        const bubble = createElement('div', [CSS_CLASSES.LMD, CSS_CLASSES.LMD_BUBBLE]);
+        const bubble = (0, utils_js_1.createElement)('div', [constants_js_1.CSS_CLASSES.LMD, constants_js_1.CSS_CLASSES.LMD_BUBBLE]);
         this.bubbleDivs.push(bubble);
-        bubble.id = `${ID_PREFIXES.BUBBLE_DIV}-${this.bubbleDivs.length}`;
-        bubble.style.width = `${FRAME_DIMENSIONS.WIDTH}px`;
-        bubble.style.height = `${FRAME_DIMENSIONS.HEIGHT}px`;
+        bubble.id = `${constants_js_1.ID_PREFIXES.BUBBLE_DIV}-${this.bubbleDivs.length}`;
+        bubble.style.width = `${constants_js_1.FRAME_DIMENSIONS.WIDTH}px`;
+        bubble.style.height = `${constants_js_1.FRAME_DIMENSIONS.HEIGHT}px`;
         bubble.style.cssText += 'z-index: 999999999 !important;';
         bubble.style.position = 'absolute';
         bubble.style.visibility = 'visible';
@@ -179,14 +181,14 @@ class LongmanDictionaryExtension {
         return bubble;
     }
     addCloseButton(bubble) {
-        const closeBtn = createElement('div', [CSS_CLASSES.LMD, CSS_CLASSES.LMD_CLOSE_BTN]);
-        closeBtn.id = `${ID_PREFIXES.CLOSE_BTN}-${this.bubbleDivs.length}`;
+        const closeBtn = (0, utils_js_1.createElement)('div', [constants_js_1.CSS_CLASSES.LMD, constants_js_1.CSS_CLASSES.LMD_CLOSE_BTN]);
+        closeBtn.id = `${constants_js_1.ID_PREFIXES.CLOSE_BTN}-${this.bubbleDivs.length}`;
         closeBtn.addEventListener('click', (event) => {
             const target = event.target;
-            const bubbleId = `${ID_PREFIXES.BUBBLE_DIV}${target.id.replace(ID_PREFIXES.CLOSE_BTN, '')}`;
+            const bubbleId = `${constants_js_1.ID_PREFIXES.BUBBLE_DIV}${target.id.replace(constants_js_1.ID_PREFIXES.CLOSE_BTN, '')}`;
             this.bubbleDivs.forEach((bubbleElement) => {
                 if (bubbleElement.id === bubbleId) {
-                    safeRemoveElement(bubbleElement, this.documentBody);
+                    (0, utils_js_1.safeRemoveElement)(bubbleElement, this.documentBody);
                     this.bubbleDiv = undefined;
                 }
             });
@@ -194,19 +196,19 @@ class LongmanDictionaryExtension {
         bubble.appendChild(closeBtn);
     }
     createContentContainer() {
-        const container = createElement('div', [CSS_CLASSES.LMD]);
+        const container = (0, utils_js_1.createElement)('div', [constants_js_1.CSS_CLASSES.LMD]);
         container.style.minWidth = '200px';
         container.style.maxWidth = '400px';
         return container;
     }
     addHeadword(container) {
-        const headwordDiv = createElement('div', [CSS_CLASSES.LMD]);
+        const headwordDiv = (0, utils_js_1.createElement)('div', [constants_js_1.CSS_CLASSES.LMD]);
         headwordDiv.innerHTML = this.selectionText;
         headwordDiv.style.cssText += 'font-size: 30px !important;';
         headwordDiv.style.fontWeight = 'bold';
         headwordDiv.style.color = 'blue';
         container.appendChild(headwordDiv);
-        const hr = createElement('hr');
+        const hr = (0, utils_js_1.createElement)('hr');
         hr.style.margin = '1px';
         container.appendChild(hr);
     }
@@ -229,14 +231,14 @@ class LongmanDictionaryExtension {
             }
             this.addSynonyms(container, entry, synonymData);
             if (index < entries.length - 1) {
-                const hr = createElement('hr');
+                const hr = (0, utils_js_1.createElement)('hr');
                 hr.style.margin = '1px';
                 container.appendChild(hr);
             }
         });
     }
     addPartOfSpeech(container, entry) {
-        const posDiv = createElement('div', [CSS_CLASSES.LMD]);
+        const posDiv = (0, utils_js_1.createElement)('div', [constants_js_1.CSS_CLASSES.LMD]);
         const posStr = entry.partOfSpeech;
         posDiv.innerHTML = `- ${posStr.charAt(0).toUpperCase()}${posStr.slice(1)}`;
         if (entry.grammaticalInfo) {
@@ -248,24 +250,24 @@ class LongmanDictionaryExtension {
         container.appendChild(posDiv);
     }
     addAudioButton(container, audioSrc) {
-        const audio = createElement('audio', [CSS_CLASSES.LMD]);
+        const audio = (0, utils_js_1.createElement)('audio', [constants_js_1.CSS_CLASSES.LMD]);
         audio.src = audioSrc;
         audio.preload = 'auto';
-        const audioBtnDiv = createElement('div', [CSS_CLASSES.LMD]);
+        const audioBtnDiv = (0, utils_js_1.createElement)('div', [constants_js_1.CSS_CLASSES.LMD]);
         audioBtnDiv.style.display = 'inline-block';
-        audioBtnDiv.addEventListener('click', () => audio.play().catch(logger.error), false);
-        const audioImgDiv = createElement('div', [CSS_CLASSES.LMD, CSS_CLASSES.LMD_AUDIO_IMG]);
+        audioBtnDiv.addEventListener('click', () => audio.play().catch(utils_js_1.logger.error), false);
+        const audioImgDiv = (0, utils_js_1.createElement)('div', [constants_js_1.CSS_CLASSES.LMD, constants_js_1.CSS_CLASSES.LMD_AUDIO_IMG]);
         audioBtnDiv.appendChild(audioImgDiv);
         container.appendChild(audioBtnDiv);
     }
     addIPA(container, ipa) {
-        const ipaDiv = createElement('div', [CSS_CLASSES.LMD]);
+        const ipaDiv = (0, utils_js_1.createElement)('div', [constants_js_1.CSS_CLASSES.LMD]);
         ipaDiv.style.display = 'inline-block';
         ipaDiv.innerHTML = ipa;
         container.appendChild(ipaDiv);
     }
     addDefinition(container, definition) {
-        const definitionDiv = createElement('div', [CSS_CLASSES.LMD]);
+        const definitionDiv = (0, utils_js_1.createElement)('div', [constants_js_1.CSS_CLASSES.LMD]);
         definitionDiv.innerHTML = definition;
         definitionDiv.style.paddingLeft = '15px';
         definitionDiv.style.fontWeight = 'bold';
@@ -273,19 +275,19 @@ class LongmanDictionaryExtension {
     }
     addExample(container, example) {
         if (example.audio) {
-            const exampleAudio = createElement('audio', [CSS_CLASSES.LMD]);
+            const exampleAudio = (0, utils_js_1.createElement)('audio', [constants_js_1.CSS_CLASSES.LMD]);
             exampleAudio.src = example.audio;
             exampleAudio.preload = 'auto';
-            const exampleAudioBtn = createElement('div', [CSS_CLASSES.LMD]);
+            const exampleAudioBtn = (0, utils_js_1.createElement)('div', [constants_js_1.CSS_CLASSES.LMD]);
             exampleAudioBtn.style.display = 'inline-block';
             exampleAudioBtn.style.verticalAlign = 'top';
             exampleAudioBtn.style.paddingLeft = '15px';
-            exampleAudioBtn.onclick = () => exampleAudio.play().catch(logger.error);
-            const exampleAudioImg = createElement('div', [CSS_CLASSES.LMD, CSS_CLASSES.LMD_AUDIO_IMG]);
+            exampleAudioBtn.onclick = () => exampleAudio.play().catch(utils_js_1.logger.error);
+            const exampleAudioImg = (0, utils_js_1.createElement)('div', [constants_js_1.CSS_CLASSES.LMD, constants_js_1.CSS_CLASSES.LMD_AUDIO_IMG]);
             exampleAudioBtn.appendChild(exampleAudioImg);
             container.appendChild(exampleAudioBtn);
         }
-        const exampleText = createElement('div', [CSS_CLASSES.LMD]);
+        const exampleText = (0, utils_js_1.createElement)('div', [constants_js_1.CSS_CLASSES.LMD]);
         exampleText.innerHTML = example.text;
         exampleText.style.display = 'inline-block';
         exampleText.style.color = 'blue';
@@ -293,14 +295,14 @@ class LongmanDictionaryExtension {
         container.appendChild(exampleText);
     }
     addSynonyms(container, entry, synonymData) {
-        const synonymsDiv = createElement('div', [CSS_CLASSES.LMD]);
+        const synonymsDiv = (0, utils_js_1.createElement)('div', [constants_js_1.CSS_CLASSES.LMD]);
         synonymsDiv.innerHTML = 'Synonyms: ';
         if (entry.partOfSpeech) {
             const synonymClass = `synonyms-${entry.partOfSpeech.replace(/\s+/g, '')}`;
             synonymsDiv.classList.add(synonymClass);
             if (synonymData[synonymClass] && synonymData[synonymClass].length > 0) {
                 synonymData[synonymClass].forEach((synonym, index) => {
-                    const synonymSpan = createElement('span');
+                    const synonymSpan = (0, utils_js_1.createElement)('span');
                     synonymSpan.innerHTML = synonym.headword;
                     if (synonym.definition) {
                         synonymSpan.title = synonym.definition;
@@ -317,7 +319,7 @@ class LongmanDictionaryExtension {
         synonymsDiv.style.color = '#6b6060';
         synonymsDiv.style.display = entry.synonym || synonymData[`synonyms-${entry.partOfSpeech?.replace(/\s+/g, '') || ''}`] ? '' : 'none';
         if (entry.synonym) {
-            const synonymDiv = createElement('div');
+            const synonymDiv = (0, utils_js_1.createElement)('div');
             synonymDiv.style.display = 'inline-block';
             synonymDiv.innerHTML = entry.synonym;
             synonymsDiv.appendChild(synonymDiv);
@@ -325,20 +327,20 @@ class LongmanDictionaryExtension {
         container.appendChild(synonymsDiv);
     }
     addNotFoundMessage(container) {
-        const notFoundDiv = createElement('div', [CSS_CLASSES.LMD]);
+        const notFoundDiv = (0, utils_js_1.createElement)('div', [constants_js_1.CSS_CLASSES.LMD]);
         notFoundDiv.innerHTML = 'Not Found';
         container.appendChild(notFoundDiv);
     }
     addFooter(container) {
-        const footerDiv = createElement('div', [CSS_CLASSES.LMD, CSS_CLASSES.LMD_FOOTER]);
+        const footerDiv = (0, utils_js_1.createElement)('div', [constants_js_1.CSS_CLASSES.LMD, constants_js_1.CSS_CLASSES.LMD_FOOTER]);
         footerDiv.style.paddingTop = '3px';
-        const moreLink = createElement('a', [CSS_CLASSES.LMD, CSS_CLASSES.LMD_A]);
+        const moreLink = (0, utils_js_1.createElement)('a', [constants_js_1.CSS_CLASSES.LMD, constants_js_1.CSS_CLASSES.LMD_A]);
         moreLink.href = `https://www.ldoceonline.com/dictionary/${this.selectionText}`;
         moreLink.innerHTML = 'More >>';
         moreLink.target = '_blank';
         moreLink.style.cursor = 'pointer';
         moreLink.addEventListener('focus', (event) => {
-            if (isHTMLElement(event.target)) {
+            if ((0, utils_js_1.isHTMLElement)(event.target)) {
                 event.target.blur();
             }
         }, false);
@@ -364,18 +366,18 @@ class LongmanDictionaryExtension {
         }
         this.bubbleDiv.style.left = `${leftPosition}px`;
         let topPosition = 0;
-        if (this.selectionBoundingClientRect.top < this.bubbleDiv.getBoundingClientRect().height + UI_CONSTANTS.TOP_ADJUSTMENT_PX) {
-            topPosition = this.documentElement.scrollTop + this.selectionBoundingClientRect.bottom + UI_CONSTANTS.TOP_ADJUSTMENT_PX;
+        if (this.selectionBoundingClientRect.top < this.bubbleDiv.getBoundingClientRect().height + constants_js_1.UI_CONSTANTS.TOP_ADJUSTMENT_PX) {
+            topPosition = this.documentElement.scrollTop + this.selectionBoundingClientRect.bottom + constants_js_1.UI_CONSTANTS.TOP_ADJUSTMENT_PX;
             this.bubbleDiv.classList.add(`lower-${positionModifyClass}arrow`);
         }
         else {
             topPosition = this.documentElement.scrollTop + this.selectionBoundingClientRect.top -
-                (this.bubbleDiv.getBoundingClientRect().height + UI_CONSTANTS.TOP_ADJUSTMENT_PX);
+                (this.bubbleDiv.getBoundingClientRect().height + constants_js_1.UI_CONSTANTS.TOP_ADJUSTMENT_PX);
             this.bubbleDiv.classList.add(`upper-${positionModifyClass}arrow`);
         }
         this.bubbleDiv.style.top = `${topPosition}px`;
         this.bubbleDiv.style.opacity = '1';
-        logger.debug('Bubble positioned', { position: { left: leftPosition, top: topPosition } });
+        utils_js_1.logger.debug('Bubble positioned', { position: { left: leftPosition, top: topPosition } });
     }
 }
 new LongmanDictionaryExtension();
